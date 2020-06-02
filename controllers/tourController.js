@@ -7,11 +7,6 @@ exports.aliasTopTours = (req, res, next) => {
   req.query.fields = 'name,price,ratingsAverage,summary,difficulty';
   next();
 };
-// const tours = JSON.parse(
-//   fs.readFileSync(
-//     `${__dirname}/../dev-data/data/tours-simple.json`
-//   )
-// );
 
 exports.getAllTours = async (req, res) => {
   try {
