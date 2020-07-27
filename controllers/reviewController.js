@@ -4,12 +4,17 @@ const catchAsync = require('../utils/catchAsync');
 // const AppError = require('../utils/appError');
 
 exports.getAllReviews = catchAsync(async (req, res, next) => {
-  const features = new APIFeatures(Review.find(), req.query)
-    .filter()
-    .sort()
-    .limitFields()
-    .paginate();
-  const reviews = await features.query;
+  let filter = {};
+  if (req.params.tourId) filter = { tour: req.params.tourId };
+
+  const reviews = await Review.find(filter);
+  // const feature = new APIFeatures(Review.find(), req.params);
+
+  // if (req.params.tourId) {
+  //   feature.filter();
+  // }
+
+  // reviews = await feature.query;
 
   res.status(200).json({
     status: 'success',
