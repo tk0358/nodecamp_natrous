@@ -50,11 +50,13 @@ exports.getAccount = (req, res) => {
 
 exports.updateUserData = catchAsync(async (req, res, next) => {
   console.log(req.body);
+  console.log(req.file);
   const updatedUser = await User.findByIdAndUpdate(
     req.user.id,
     {
       name: req.body.name,
       email: req.body.email,
+      photo: req.file.filename,
     },
     {
       new: true,

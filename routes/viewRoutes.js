@@ -1,6 +1,7 @@
 const express = require('express');
 const viewsController = require('../controllers/viewsController');
 const authController = require('../controllers/authController');
+const userController = require('../controllers/userController');
 
 const router = express.Router();
 
@@ -12,6 +13,9 @@ router.get('/me', authController.protect, viewsController.getAccount);
 router.post(
   '/submit-user-data',
   authController.protect,
+  userController.uploadUserPhoto,
+  userController.resizeUserPhoto,
+  // userController.updateMe
   viewsController.updateUserData
 );
 
