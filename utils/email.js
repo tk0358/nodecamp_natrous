@@ -14,13 +14,9 @@ module.exports = class Email {
 
   newTransport() {
     if (process.env.NODE_ENV.trim() === 'production') {
-      console.log(process.env.SENDGRID_USERNAME);
-      console.log(process.env.SENDGRID_PASSWORD);
       // Sendgrid
       return nodemailer.createTransport({
         service: 'SendGrid',
-        // host: process.env.SENDGRID_HOST,
-        // port: process.env.SENDGRID_PORT,
         auth: {
           user: process.env.SENDGRID_USERNAME,
           pass: process.env.SENDGRID_PASSWORD,
@@ -57,7 +53,6 @@ module.exports = class Email {
       text: htmlToText.fromString(html),
     };
 
-    console.log(mailOptions);
     // 3) Create a transport and send email
     await this.newTransport().sendMail(mailOptions);
   }
