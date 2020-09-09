@@ -1,6 +1,6 @@
 const express = require('express');
 const bookingController = require('../controllers/bookingController');
-const tourController = require('../controllers/tourController');
+// const tourController = require('../controllers/tourController');
 const authController = require('../controllers/authController');
 
 const router = express.Router({ mergeParams: true });
@@ -15,9 +15,8 @@ router
   .route('/')
   .get(bookingController.getAllBookings)
   .post(
-    bookingController.examineDate,
-    bookingController.createBooking,
-    tourController.updateStartDate
+    bookingController.examineDateAndParticipant,
+    bookingController.createBooking
   );
 
 router

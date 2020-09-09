@@ -3,6 +3,7 @@ const Tour = require('../models/tourModel');
 const Booking = require('../models/bookingModel');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
+const AppError = require('../utils/appError');
 
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   // 1) Get the currently booked tour
@@ -46,9 +47,25 @@ exports.createBookingCheckout = catchAsync(async (req, res, next) => {
   res.redirect(req.originalUrl.split('?')[0]);
 });
 
-exports.examineDate = catchAsync(async (req, res, next) => {
+exports.examineDateAndParticipant = catchAsync(async (req, res, next) => {
   const tour = await Tour.findByIdAndUpdate(req.body.tour);
-  console.log(req.body);
+  const date = new Date(req.body.startDate);
+  const index = tour.startDates.findIndex(
+    el => el.startDate.getTime() === date.getTime()
+  );
+  if (index === -1) {
+    return next(
+      new AppError('startDate should be among startDates of the tour', 400)
+    );
+  }
+  if (tour.startDates[index].soldOut) {
+    return next(
+      new AppError(
+        'Sorry, this day is booked out! Please select another day',
+        400
+      )
+    );
+  }
   next();
 });
 

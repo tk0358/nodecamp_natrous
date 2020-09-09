@@ -154,10 +154,6 @@ tourSchema.pre('save', function (next) {
   next();
 });
 
-tourSchema.post('save', function (next) {
-  this.startDates.forEach(date => {});
-});
-
 // tourSchema.pre('save', async function (next) {
 //   const guidesPromises = this.guides.map(async id => await User.findById(id));
 //   this.guides = await Promise.all(guidesPromises);

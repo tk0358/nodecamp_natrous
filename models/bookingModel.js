@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Tour = require('./tourModel');
 
 const bookingSchema = new mongoose.Schema({
   tour: {
@@ -35,6 +36,29 @@ bookingSchema.pre(/^find/, function (next) {
     select: 'name',
   });
 
+  next();
+});
+
+bookingSchema.post('save', async function (doc, next) {
+  // 1) find the index of the target date
+  const tour = await Tour.findById(doc.tour);
+  const index = tour.startDates.findIndex(
+    el => el.startDate.getTime() === doc.startDate.getTime()
+  );
+
+  // 2) participant
+  const { startDates } = tour;
+  startDates[index].participant += 1;
+
+  // 3) compare participant with maxGroupSize
+  if (startDates[index].participant === tour.maxGroupSize) {
+    startDates[index].soldOut = true;
+  }
+
+  // 4) update startDates of the tour
+  await Tour.findByIdAndUpdate(tour.id, {
+    startDates,
+  });
   next();
 });
 

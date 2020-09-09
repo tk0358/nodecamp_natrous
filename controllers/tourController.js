@@ -225,6 +225,31 @@ exports.getDistances = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.updateStartDate = (req, res, next) => {
+exports.updateStartDate = catchAsync(async (req, res, next) => {
+  // 1) find the index of the target date
+  const tour = Tour.findById(req.body.tour);
+  // const index = tour.startDates.findIndex(
+  //   el => el.startDate.getTime() === new Date(req.body.startDate).getTime()
+  // );
+
+  const index = req.startDateIndex;
+  const { startDates } = tour;
+
+  console.log(startDates);
+
+  // 2) participant
+  // const participant = tour.startDates[index].participant + 1;
+  startDates[index].participant += 1;
+
+  // 3) compare participant with maxGroupSize
+  if (startDates[index].participant === tour.maxGroupSize) {
+    startDates[index].soldOut = true;
+  }
+
+  console.log(startDates);
+  // 4) update startDates of the tour
+  await Tour.findByIdAndUpdate(req.body.tour, {
+    startDates,
+  });
   next();
-};
+});
