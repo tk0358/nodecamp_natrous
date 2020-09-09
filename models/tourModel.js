@@ -75,7 +75,22 @@ const tourSchema = new mongoose.Schema(
       default: Date.now(),
       select: false,
     },
-    startDates: [Date],
+    startDates: [
+      {
+        startDate: {
+          type: Date,
+          required: [true, 'startDate is necesary.'],
+        },
+        participant: {
+          type: Number,
+          default: 0,
+        },
+        soldOut: {
+          type: Boolean,
+          default: false,
+        },
+      },
+    ],
     secretTour: {
       type: Boolean,
       default: false,
@@ -137,6 +152,10 @@ tourSchema.virtual('reviews', {
 tourSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true });
   next();
+});
+
+tourSchema.post('save', function (next) {
+  this.startDates.forEach(date => {});
 });
 
 // tourSchema.pre('save', async function (next) {
