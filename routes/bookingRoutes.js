@@ -1,5 +1,6 @@
 const express = require('express');
 const bookingController = require('../controllers/bookingController');
+const tourController = require('../controllers/tourController');
 const authController = require('../controllers/authController');
 
 const router = express.Router({ mergeParams: true });
@@ -13,7 +14,11 @@ router.use(authController.restrictTo('admin', 'lead-guide'));
 router
   .route('/')
   .get(bookingController.getAllBookings)
-  .post(bookingController.createBooking);
+  .post(
+    bookingController.examineDate,
+    bookingController.createBooking,
+    tourController.updateStartDate
+  );
 
 router
   .route('/:id')

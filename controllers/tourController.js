@@ -224,3 +224,7 @@ exports.getDistances = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.updateStartDate = (req, res, next) => {
+  next();
+};

@@ -46,6 +46,12 @@ exports.createBookingCheckout = catchAsync(async (req, res, next) => {
   res.redirect(req.originalUrl.split('?')[0]);
 });
 
+exports.examineDate = catchAsync(async (req, res, next) => {
+  const tour = await Tour.findByIdAndUpdate(req.body.tour);
+  console.log(req.body);
+  next();
+});
+
 exports.createBooking = factory.createOne(Booking);
 exports.getBooking = factory.getOne(Booking);
 exports.getAllBookings = factory.getAll(Booking);
