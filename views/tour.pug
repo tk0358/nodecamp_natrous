@@ -91,6 +91,6 @@ block content
         if user
           each startDate in tour.startDates
             - if (!startDate.soldOut)
-              button.btn.btn--green.span-all-rows#book-tour(data-tour-id=`${tour.id}`)= `${startDate.startDate} Book now!`
+              button.btn.btn--green.span-all-rows.book-tour(data-tour-id=`${tour.id}` data-start-date=`${startDate.startDate.getTime()}`)= `${startDate.startDate} 残${tour.maxGroupSize - startDate.participant} Book now!`
         else
           a.btn.btn--green.span-all-rows(href='/login') Log in to book tour
