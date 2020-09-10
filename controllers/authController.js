@@ -38,7 +38,7 @@ const createSendToken = (user, statusCode, res) => {
 
 exports.signup = catchAsync(async (req, res, next) => {
   // const newUser = await User.create(req.body);
-  const newUser = await User.create({
+  const newUser = new User({
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
@@ -47,11 +47,65 @@ exports.signup = catchAsync(async (req, res, next) => {
     role: req.body.role,
   });
 
-  const url = `${req.protocol}://${req.get('host')}/me`;
-  console.log(url);
-  await new Email(newUser, url).sendWelcome();
+  // 1) create confirm Token
+  const token = newUser.createConfirmToken();
+  await newUser.save();
 
-  createSendToken(newUser, 201, res);
+  // 2) send email with token
+  try {
+    const url = `${req.protocol}://${req.get(
+      'host'
+    )}/api/v1/users/confirmEmail/${token}`;
+
+    new Email(newUser, url).sendConfirm();
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Please confirm the email that we sent now.',
+    });
+  } catch (err) {
+    newUser.confirmToken = undefined;
+    newUser.confirmExpires = undefined;
+    await user.save({ validateBeforeSave: false });
+    return next(
+      new AppError(
+        'There was an error sending the email. Try again later!',
+        500
+      )
+    );
+  }
+  // Before
+  // const url = `${req.protocol}://${req.get('host')}/me`;
+  // console.log(url);
+  // await new Email(newUser, url).sendWelcome();
+  // createSendToken(newUser, 201, res);
+});
+
+exports.confirmEmail = catchAsync(async (req, res, next) => {
+  // 1) Get user based on the token
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(req.params.token)
+    .digest('hex');
+
+  const user = await User.findOne({
+    confirmToken: hashedToken,
+    confirmExpires: { $gt: Date.now() },
+  });
+
+  // 2) If token has not expired, and there is user, set the active true
+  if (!user) {
+    return next(new AppError('Token is invalid or has expired', 400));
+  }
+  user.mailConfirm = true;
+  user.confirmToken = undefined;
+  user.confirmExpires = undefined;
+  await user.save({ validateBeforeSave: false });
+
+  // 3) send welcome mail ,log the user in, send JWT
+  const url = `${req.protocol}://${req.get('host')}/me`;
+  await new Email(user, url).sendWelcome();
+  createSendToken(user, 200, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -62,8 +116,15 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Please provide email and password', 400));
   }
   // 2) Check if user exists && password is correct
-  const user = await User.findOne({ email }).select('+password');
+  const user = await User.findOne({ email })
+    .select('+password')
+    .select('+mailConfirm');
   // const correct = await user.correctPassword(password, user.password);
+
+  console.log(user);
+  if (!user.mailConfirm) {
+    return next(new AppError('Please confirm your email', 401));
+  }
 
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError('Incorrect email or password', 401));
