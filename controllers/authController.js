@@ -31,6 +31,7 @@ const generateRefreshToken = (id, ip) => {
 };
 
 const revokeRefreshToken = catchAsync(async (token, ip) => {
+  console.log(token);
   const refreshToken = await RefreshToken.findOne({ token });
   // revoke token and save
   refreshToken.revoked = Date.now();
@@ -50,7 +51,7 @@ const createJwtAndCookieOptions = (user, ip) => {
   return { jwtToken, jwtCookieOptions };
 };
 
-const createRefreshAndCookieOptions = catchAsync(async (user, ip) => {
+const createRefreshAndCookieOptions = async (user, ip) => {
   const refreshToken = generateRefreshToken(user._id, ip);
   await refreshToken.save();
 
@@ -61,20 +62,21 @@ const createRefreshAndCookieOptions = catchAsync(async (user, ip) => {
     httpOnly: true,
   };
   if (process.env.NODE_ENV === 'production') refreshCookieOptions.secure = true;
-  return { refreshToken, refreshCookieOptions };
-});
 
-const createSendToken = catchAsync(async ({ user, ip }, statusCode, res) => {
+  return { refreshToken: refreshToken.token, refreshCookieOptions };
+};
+
+const createSendToken = async ({ user, ip }, statusCode, res) => {
   const { jwtToken, jwtCookieOptions } = createJwtAndCookieOptions(user, ip);
 
-  const { refreshToken, refreshCookieOptions } = createRefreshAndCookieOptions(
-    user,
-    ip
-  );
+  const {
+    refreshToken,
+    refreshCookieOptions,
+  } = await createRefreshAndCookieOptions(user, ip);
 
   res
     .cookie('jwtToken', jwtToken, jwtCookieOptions)
-    .cookie('refreshToken', refreshToken.token, refreshCookieOptions);
+    .cookie('refreshToken', refreshToken, refreshCookieOptions);
 
   // Remove password froｍ output
   user.password = undefined;
@@ -82,12 +84,12 @@ const createSendToken = catchAsync(async ({ user, ip }, statusCode, res) => {
   res.status(statusCode).json({
     status: 'success',
     jwtToken,
-    refreshToken: refreshToken.token,
+    refreshToken: refreshToken,
     data: {
       user,
     },
   });
-});
+};
 
 exports.signup = catchAsync(async (req, res, next) => {
   // const newUser = await User.create(req.body);
@@ -185,14 +187,17 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   // 3) revoke used refreshToken
-  await revokeRefreshToken(req.cookies.refreshToken, ip);
+  // console.log(req.cookies);
+  if (req.cookies.refreshToken) {
+    await revokeRefreshToken(req.cookies.refreshToken, ip);
+  }
 
   // 4) If everyghing ok, create jwt and new refreshToken and send them to client
   await createSendToken({ user, ip }, 200, res);
 });
 
 exports.logout = (req, res) => {
-  res.cookie('jwt', 'loggedout', {
+  res.cookie('jwtToken', 'loggedout', {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
   });
@@ -201,7 +206,9 @@ exports.logout = (req, res) => {
 
 exports.protect = catchAsync(async (req, res, next) => {
   // 1) Getting token and check if it's there
-  let jwtToken, currentUser;
+  let jwtToken;
+  let currentUser;
+
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
@@ -255,8 +262,9 @@ exports.protect = catchAsync(async (req, res, next) => {
         new AppError('Your refresh token has expired. Please log in again', 401)
       );
     }
-    // create new jwtToken
+
     currentUser = await User.findById(refreshTokenObj.user);
+    // create new jwtToken
     const {
       jwtToken: newJwtToken,
       jwtCookieOptions,
@@ -274,7 +282,8 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 // Only for rendered pages, no errors!
 exports.isLoggedIn = async (req, res, next) => {
-  if (req.cookies.jwt) {
+  let currentUser;
+  if (req.cookies.jwtToken) {
     try {
       // 1) Verify token
       const decoded = await promisify(jwt.verify)(
@@ -283,7 +292,7 @@ exports.isLoggedIn = async (req, res, next) => {
       );
 
       // 2) Check if user still exists
-      const currentUser = await User.findById(decoded.id);
+      currentUser = await User.findById(decoded.id);
       if (!currentUser) {
         return next();
       }
@@ -297,6 +306,30 @@ exports.isLoggedIn = async (req, res, next) => {
       res.locals.user = currentUser;
       return next();
     } catch (err) {
+      // when jwtToken has expired
+      if (req.cookies.refreshToken) {
+        const refreshTokenObj = await RefreshToken.findOne({
+          token: req.cookies.refreshToken,
+        });
+        if (!refreshTokenObj || !refreshTokenObj.isActive) {
+          // when refresh token is invalid
+          return next();
+        }
+        currentUser = await User.findById(refreshTokenObj.user);
+        // create new jwtToken
+        const {
+          jwtToken: newJwtToken,
+          jwtCookieOptions,
+        } = createJwtAndCookieOptions(currentUser, req.ip);
+
+        // send new jwtToken as cookie
+        res.cookie('jwtToken', newJwtToken, jwtCookieOptions);
+
+        // THERE IS A LOGGED IN USER
+        res.locals.user = currentUser;
+        return next();
+      }
+
       return next();
     }
   }

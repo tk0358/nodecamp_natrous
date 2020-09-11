@@ -1,10 +1,11 @@
 const fs = require('fs');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const Tour = require('./../../models/tourModel');
-const Review = require('./../../models/reviewModel');
-const User = require('./../../models/userModel');
+const Tour = require('../../models/tourModel');
+const Review = require('../../models/reviewModel');
+const User = require('../../models/userModel');
 const Booking = require('../../models/bookingModel');
+const RefreshToken = require('../../models/refreshTokenModel');
 
 dotenv.config({ path: './config.env' });
 
@@ -28,7 +29,7 @@ const tours = JSON.parse(
 );
 // const users = JSON.parse(fs.readFileSync(`${__dirname}/users.json`, 'utf-8'));
 const users = JSON.parse(
-  fs.readFileSync(`${__dirname}/users_password.json`, 'utf-8')
+  fs.readFileSync(`${__dirname}/users_password_mailConfirm.json`, 'utf-8')
 );
 const reviews = JSON.parse(
   fs.readFileSync(`${__dirname}/reviews.json`, 'utf-8')
@@ -55,6 +56,7 @@ const deleteData = async () => {
     await User.deleteMany();
     await Review.deleteMany();
     await Booking.deleteMany();
+    await RefreshToken.deleteMany();
     console.log('Data successfully deleted!');
   } catch (err) {
     console.log(err);
