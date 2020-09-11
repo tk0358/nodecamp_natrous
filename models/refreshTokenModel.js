@@ -36,6 +36,6 @@ refreshTokenSchema.set('toJSON', {
   },
 });
 
-const RefresToken = mongoose.model('RefreshToken', refreshTokenSchema);
+const RefreshToken = mongoose.model('RefreshToken', refreshTokenSchema);
 
-module.exports = RefresToken;
+module.exports = RefreshToken;
