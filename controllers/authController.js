@@ -143,7 +143,7 @@ exports.confirmEmail = catchAsync(async (req, res, next) => {
     .update(req.params.token)
     .digest('hex');
 
-  console.log(hashedToken);
+  // console.log(hashedToken);
 
   const user = await User.findOne({
     confirmToken: hashedToken,
@@ -165,7 +165,7 @@ exports.confirmEmail = catchAsync(async (req, res, next) => {
   const url = `${req.protocol}://${req.get('host')}/me`;
   await new Email(user, url).sendWelcome();
 
-  // 4) Create tokens & send cookie
+  // 4) Create tokens & send them as cookie
   const { jwtToken, jwtCookieOptions } = createJwtAndCookieOptions(
     user,
     req.ip
