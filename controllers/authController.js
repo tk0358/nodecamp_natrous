@@ -143,6 +143,8 @@ exports.confirmEmail = catchAsync(async (req, res, next) => {
     .update(req.params.token)
     .digest('hex');
 
+  console.log(hashedToken);
+
   const user = await User.findOne({
     confirmToken: hashedToken,
     confirmExpires: { $gt: Date.now() },
@@ -155,12 +157,14 @@ exports.confirmEmail = catchAsync(async (req, res, next) => {
   user.mailConfirm = true;
   user.confirmToken = undefined;
   user.confirmExpires = undefined;
+  console.log('before save');
   await user.save({ validateBeforeSave: false });
+  console.log('after save');
 
   // 3) send welcome mail ,log the user in, send JWT
   const url = `${req.protocol}://${req.get('host')}/me`;
   await new Email(user, url).sendWelcome();
-  createSendToken(user, 200, res);
+  createSendToken({ user, ip: req.ip }, 200, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
