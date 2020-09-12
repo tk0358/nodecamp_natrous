@@ -200,13 +200,20 @@ exports.login = catchAsync(async (req, res, next) => {
   await createSendToken({ user, ip }, 200, res);
 });
 
-exports.logout = (req, res) => {
-  res.cookie('jwtToken', 'loggedout', {
-    expires: new Date(Date.now() + 10 * 1000),
-    httpOnly: true,
-  });
+exports.logout = catchAsync(async (req, res) => {
+  await revokeRefreshToken(req.cookies.refreshToken, req.ip);
+
+  res
+    .cookie('jwtToken', 'loggedout', {
+      expires: new Date(Date.now() + 10 * 1000),
+      httpOnly: true,
+    })
+    .cookie('refreshToken', 'loggedout', {
+      expires: new Date(Date.now() + 10 * 1000),
+      httpOnly: true,
+    });
   res.status(200).json({ status: 'success' });
-};
+});
 
 exports.protect = catchAsync(async (req, res, next) => {
   // 1) Getting token and check if it's there
