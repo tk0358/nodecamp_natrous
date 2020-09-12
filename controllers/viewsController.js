@@ -43,6 +43,12 @@ exports.getLoginForm = (req, res, next) => {
   });
 };
 
+exports.getSignupForm = (req, res, next) => {
+  res.status(200).render('signup', {
+    title: 'Sign up to Natours',
+  });
+};
+
 exports.getAccount = (req, res) => {
   res.status(200).render('account', {
     title: 'Your account',

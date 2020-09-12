@@ -157,14 +157,31 @@ exports.confirmEmail = catchAsync(async (req, res, next) => {
   user.mailConfirm = true;
   user.confirmToken = undefined;
   user.confirmExpires = undefined;
-  console.log('before save');
+  // console.log('before save');
   await user.save({ validateBeforeSave: false });
-  console.log('after save');
+  // console.log('after save');
 
   // 3) send welcome mail ,log the user in, send JWT
   const url = `${req.protocol}://${req.get('host')}/me`;
   await new Email(user, url).sendWelcome();
-  createSendToken({ user, ip: req.ip }, 200, res);
+
+  // 4) Create tokens & send cookie
+  const { jwtToken, jwtCookieOptions } = createJwtAndCookieOptions(
+    user,
+    req.ip
+  );
+
+  const {
+    refreshToken,
+    refreshCookieOptions,
+  } = await createRefreshAndCookieOptions(user, req.ip);
+
+  res
+    .cookie('jwtToken', jwtToken, jwtCookieOptions)
+    .cookie('refreshToken', refreshToken, refreshCookieOptions);
+
+  // 5) redirect to top page
+  res.redirect('/');
 });
 
 exports.login = catchAsync(async (req, res, next) => {
