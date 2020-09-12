@@ -13,6 +13,7 @@ const logOutBtn = document.querySelector('.nav__el--logout');
 const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
 const bookBtns = document.querySelectorAll('.book-tour');
+const reviewForm = document.querySelector('.review-form');
 
 // DELEGATION
 if (mapBox) {
@@ -81,3 +82,11 @@ if (bookBtns)
       await bookTour(tourId, startDate);
     })
   );
+
+if (reviewForm)
+  reviewForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const rating = reviewForm.star.value;
+    const review = document.getElementById('review-text').value;
+    console.log(rating, review);
+  });

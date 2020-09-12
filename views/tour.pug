@@ -79,7 +79,7 @@ block content
 
 
   section.section-cta
-    .cta
+    .cta.cta-book
       .cta__img.cta__img--logo
         img(src='/img/logo-white.png', alt='Natours logo')
       img.cta__img.cta__img--1(src=`/img/tours/${tour.images[1]}`, alt='Tour picture')
@@ -94,3 +94,26 @@ block content
               button.btn.btn--green.span-all-rows.book-tour(data-tour-id=`${tour.id}` data-start-date=`${startDate.startDate.getTime()}`)= `${startDate.startDate} 残${tour.maxGroupSize - startDate.participant} Book now!`
         else
           a.btn.btn--green.span-all-rows(href='/login') Log in to book tour
+  
+  
+  section.section-cta
+    .cta(style="padding:9rem 5rem")
+      .txt-center
+        form.review-form
+          .review-form__group.rating
+            input#star5.radio-btn.hide(name="star" type="radio" value="5")
+            label(for="star5") ☆
+            input#star4.radio-btn.hide(name="star" type="radio" value="4")
+            label(for="star4") ☆
+            input#star3.radio-btn.hide(name="star" type="radio" value="3")
+            label(for="star3") ☆
+            input#star2.radio-btn.hide(name="star" type="radio" value="2")
+            label(for="star2") ☆
+            input#star1.radio-btn.hide(name="star" type="radio" value="1")
+            label(for="star1") ☆
+            .clear
+          .review-form__group.text
+            label.textarea-label(for="review-text") Tell us your review of this tour
+            textarea#review-text(name="review-text" rows="10" cols="40")
+          .review-form__group
+            button.btn.btn--green Submit
