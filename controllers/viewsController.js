@@ -17,6 +17,18 @@ exports.getOverview = catchAsync(async (req, res, next) => {
   });
 });
 
+// exports.canReviewThisTour = catchAsync(async (req, res, next) => {
+//   const tour = await Tour.findOne({ slug: req.params.slug });
+//   const booking = await Booking.findOne({
+//     tour: tour.id,
+//     user: req.user.id,
+//   });
+//   if (booking && booking.startDate <= Date.now()) {
+//     res.locals.canReview = true;
+//   }
+//   next();
+// });
+
 exports.getTour = catchAsync(async (req, res, next) => {
   // 1) get the data, for the requested tour (including reviews and guides)
   const tour = await Tour.findOne({ slug: req.params.slug }).populate({
@@ -29,7 +41,16 @@ exports.getTour = catchAsync(async (req, res, next) => {
     return next(new AppError('There is no tour with that name', 404));
   }
 
-  // 2) Build template
+  // 2) Can review the tour which user booked and is finished
+  const booking = await Booking.findOne({
+    tour: tour.id,
+    user: req.user.id,
+  });
+
+  if (booking && booking.startDate <= Date.now()) {
+    res.locals.canReview = true;
+  }
+
   // 3) Render template using data from 1)
   res.status(200).render('tour', {
     title: `${tour.name} Tour`,
