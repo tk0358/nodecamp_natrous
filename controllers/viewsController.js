@@ -3,6 +3,7 @@ const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const Booking = require('../models/bookingModel');
+const Review = require('../models/reviewModel');
 
 exports.getOverview = catchAsync(async (req, res, next) => {
   // 1) Get tour data from collection
@@ -47,8 +48,12 @@ exports.getTour = catchAsync(async (req, res, next) => {
       tour: tour.id,
       user: req.user.id,
     });
+    const review = await Review.findOne({
+      tour: tour.id,
+      user: req.user.id,
+    });
 
-    if (booking && booking.startDate <= Date.now()) {
+    if (!review && booking && booking.startDate <= Date.now()) {
       res.locals.canReview = true;
     }
   }
