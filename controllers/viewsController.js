@@ -42,8 +42,9 @@ exports.getTour = catchAsync(async (req, res, next) => {
     return next(new AppError('There is no tour with that name', 404));
   }
 
-  // 2) Can review the tour which user booked and is finished
+  // when user is logged in
   if (req.user) {
+    // 2) Can review the tour which user booked and is finished
     const booking = await Booking.findOne({
       tour: tour.id,
       user: req.user.id,
@@ -56,9 +57,11 @@ exports.getTour = catchAsync(async (req, res, next) => {
     if (!review && booking && booking.startDate <= Date.now()) {
       res.locals.canReview = true;
     }
+
+    res.locals.canBook = !booking;
   }
 
-  // 3) Render template using data from 1)
+  // 4) Render template using data from 1)
   res.status(200).render('tour', {
     title: `${tour.name} Tour`,
     tour,
