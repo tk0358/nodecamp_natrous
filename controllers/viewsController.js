@@ -42,13 +42,15 @@ exports.getTour = catchAsync(async (req, res, next) => {
   }
 
   // 2) Can review the tour which user booked and is finished
-  const booking = await Booking.findOne({
-    tour: tour.id,
-    user: req.user.id,
-  });
+  if (req.user) {
+    const booking = await Booking.findOne({
+      tour: tour.id,
+      user: req.user.id,
+    });
 
-  if (booking && booking.startDate <= Date.now()) {
-    res.locals.canReview = true;
+    if (booking && booking.startDate <= Date.now()) {
+      res.locals.canReview = true;
+    }
   }
 
   // 3) Render template using data from 1)

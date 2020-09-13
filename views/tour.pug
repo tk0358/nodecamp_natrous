@@ -99,7 +99,7 @@ block content
     section.section-cta
       .cta(style="padding:9rem 5rem")
         .txt-center
-          form.review-form
+          form.review-form#review-user(data-user-id=`${user.id}` data-tour-id=`${tour.id}`)
             .review-form__group.rating
               input#star5.radio-btn.hide(name="star" type="radio" value="5")
               label(for="star5") ☆

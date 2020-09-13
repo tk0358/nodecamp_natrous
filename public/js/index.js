@@ -4,6 +4,7 @@ import { displayMap } from './mapbox';
 import { login, logout, signup } from './login';
 import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
+import { createReview } from './createReview';
 
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
@@ -88,5 +89,8 @@ if (reviewForm)
     e.preventDefault();
     const rating = reviewForm.star.value;
     const review = document.getElementById('review-text').value;
-    console.log(rating, review);
+    const user = document.getElementById('review-user').dataset.userId;
+    const tour = document.getElementById('review-user').dataset.tourId;
+    // console.log(rating, review, user, tour);
+    createReview(rating, review, user, tour);
   });
