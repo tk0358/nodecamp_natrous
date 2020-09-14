@@ -1,7 +1,7 @@
 const Review = require('../models/reviewModel');
 const factory = require('./handlerFactory');
-const User = require('../models/userModel');
-const Tour = require('../models/tourModel');
+// const User = require('../models/userModel');
+// const Tour = require('../models/tourModel');
 const Booking = require('../models/bookingModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');

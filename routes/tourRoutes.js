@@ -3,6 +3,7 @@ const tourController = require('../controllers/tourController');
 const authController = require('../controllers/authController');
 const reviewRouter = require('./reviewRoutes');
 const bookingRouter = require('./bookingRoutes');
+const likeRouter = require('./likeRoutes');
 
 const router = express.Router();
 
@@ -13,6 +14,7 @@ const router = express.Router();
 
 router.use('/:tourId/reviews', reviewRouter);
 router.use('/:tourId/bookings', bookingRouter);
+router.use('/:tourId/likes', likeRouter);
 
 // limit=5&sort=-ratingsAverage,price
 router
