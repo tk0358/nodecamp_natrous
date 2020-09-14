@@ -5,6 +5,7 @@ import { login, logout, signup } from './login';
 import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
 import { createReview } from './createReview';
+import { createLike, deleteLike } from './like';
 
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
@@ -15,6 +16,7 @@ const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
 const bookBtns = document.querySelectorAll('.book-tour');
 const reviewForm = document.querySelector('.review-form');
+const heartBtn = document.getElementById('heart');
 
 // DELEGATION
 if (mapBox) {
@@ -93,4 +95,19 @@ if (reviewForm)
     const tour = document.getElementById('review-user').dataset.tourId;
     // console.log(rating, review, user, tour);
     createReview(rating, review, user, tour);
+  });
+
+if (heartBtn)
+  heartBtn.addEventListener('click', e => {
+    // e.preventDefault();
+    const user = heartBtn.dataset.userId;
+    const tour = heartBtn.dataset.tourId;
+    const like = heartBtn.dataset.likeId;
+    if (heartBtn.classList.contains('active')) {
+      heartBtn.classList.remove('active');
+      deleteLike(like);
+    } else {
+      heartBtn.classList.add('active');
+      createLike(user, tour);
+    }
   });

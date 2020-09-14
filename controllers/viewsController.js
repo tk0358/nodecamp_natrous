@@ -4,6 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const Booking = require('../models/bookingModel');
 const Review = require('../models/reviewModel');
+const Like = require('../models/likeModel');
 
 exports.getOverview = catchAsync(async (req, res, next) => {
   // 1) Get tour data from collection
@@ -53,12 +54,19 @@ exports.getTour = catchAsync(async (req, res, next) => {
       tour: tour.id,
       user: req.user.id,
     });
+    const like = await Like.findOne({
+      tour: tour.id,
+      user: req.user.id,
+    });
 
     if (!review && booking && booking.startDate <= Date.now()) {
       res.locals.canReview = true;
     }
 
     res.locals.canBook = !booking;
+    if (like) {
+      res.locals.like = like.id;
+    }
   }
 
   // 4) Render template using data from 1)
