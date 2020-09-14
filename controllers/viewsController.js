@@ -125,6 +125,17 @@ exports.getMyFavorites = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getMyReviews = catchAsync(async (req, res, next) => {
+  const reviews = await Review.find({ user: req.user.id }).populate({
+    path: 'tour',
+    select: 'imageCover name',
+  });
+
+  res.status(200).render('myReviews', {
+    reviews,
+  });
+});
+
 exports.updateUserData = catchAsync(async (req, res, next) => {
   console.log(req.body);
   console.log(req.file);

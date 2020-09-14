@@ -1,0 +1,26 @@
+extends base
+
+block content
+  main.main
+    .card-container
+
+      each review in reviews
+        .card
+          .card__header
+            .card__picture
+              .card__picture-overlay &nbsp;
+              img.card__picture-img(src=`/img/tours/${review.tour.imageCover}` alt=`${review.tour.name}`)
+            h3.heading-tertirary
+              span= review.tour.name
+          
+          .card__details
+            h4.card__sub-heading review
+            p.card__text= review.review
+
+          .card__footer.review-footer
+            .reviews__rating
+              each star in [1, 2, 3, 4, 5]
+                //- 3/5
+                svg.reviews__star(class=`reviews__star--${review.rating >= star ? 'active' : 'inactive'}`)
+                  use(xlink:href='/img/icons.svg#icon-star')
+            a.btn.btn--green.btn--small.edit-review(data-review-id=`${review.id}`) Edit

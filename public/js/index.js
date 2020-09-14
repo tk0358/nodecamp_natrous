@@ -17,6 +17,7 @@ const userPasswordForm = document.querySelector('.form-user-password');
 const bookBtns = document.querySelectorAll('.book-tour');
 const reviewForm = document.querySelector('.review-form');
 const heartBtn = document.getElementById('heart');
+const editReviewBtns = document.querySelectorAll('.edit-review');
 
 // DELEGATION
 if (mapBox) {
@@ -111,3 +112,26 @@ if (heartBtn)
       createLike(user, tour);
     }
   });
+
+if (editReviewBtns)
+  editReviewBtns.forEach(btn =>
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+
+      // const xhr = new XMLHttpRequest();
+      // const el = e.target.parentNode.parentNode;
+      // xhr.open('GET', '/view/editReview.html', true);
+      // xhr.onload = function () {
+      //   if (this.status == 200) {
+      //     e.target.parentNode.parentNode.childNodes[1].innerHTML =
+      //       '<textarea id=review-text name="review-text" rows="10" cols="40"></textarea>';
+      //   }
+      // };
+      // xhr.send();
+      const review =
+        e.target.parentNode.parentNode.childNodes[1].lastChild.textContent;
+      e.target.parentNode.parentNode.childNodes[1].innerHTML = `<textarea id=review-text name="review-text">${review}</textarea>`;
+      console.log('Btn is clicked!');
+      console.log(e.target.parentNode.parentNode);
+    })
+  );

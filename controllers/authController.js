@@ -248,7 +248,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   const { refreshToken } = req.cookies;
 
-  if (!jwtToken) {
+  if (!jwtToken && !refreshToken) {
     return next(
       new AppError('You are not logged in! Please log in to get access.', 401)
     );
@@ -311,59 +311,56 @@ exports.protect = catchAsync(async (req, res, next) => {
 // Only for rendered pages, no errors!
 exports.isLoggedIn = async (req, res, next) => {
   let currentUser;
-  if (req.cookies.jwtToken) {
-    try {
-      // 1) Verify token
-      const decoded = await promisify(jwt.verify)(
-        req.cookies.jwt,
-        process.env.JWT_SECRET
-      );
+  try {
+    // 1) Verify token
+    const decoded = await promisify(jwt.verify)(
+      req.cookies.jwt,
+      process.env.JWT_SECRET
+    );
 
-      // 2) Check if user still exists
-      currentUser = await User.findById(decoded.id);
-      if (!currentUser) {
+    // 2) Check if user still exists
+    currentUser = await User.findById(decoded.id);
+    if (!currentUser) {
+      return next();
+    }
+
+    // 3) Check if user changed password after the token was issued
+    if (currentUser.changedPasswordAfter(decoded.iat)) {
+      return next();
+    }
+
+    // THERE IS A LOGGED IN USER
+    res.locals.user = currentUser;
+    req.user = currentUser;
+    return next();
+  } catch (err) {
+    // when jwtToken has expired or isn't, but there is a refreshToken
+    if (req.cookies.refreshToken) {
+      const refreshTokenObj = await RefreshToken.findOne({
+        token: req.cookies.refreshToken,
+      });
+      if (!refreshTokenObj || !refreshTokenObj.isActive) {
+        // when refresh token is invalid
         return next();
       }
+      currentUser = await User.findById(refreshTokenObj.user);
+      // create new jwtToken
+      const {
+        jwtToken: newJwtToken,
+        jwtCookieOptions,
+      } = createJwtAndCookieOptions(currentUser, req.ip);
 
-      // 3) Check if user changed password after the token was issued
-      if (currentUser.changedPasswordAfter(decoded.iat)) {
-        return next();
-      }
+      // send new jwtToken as cookie
+      res.cookie('jwtToken', newJwtToken, jwtCookieOptions);
 
       // THERE IS A LOGGED IN USER
       res.locals.user = currentUser;
       req.user = currentUser;
       return next();
-    } catch (err) {
-      // when jwtToken has expired
-      if (req.cookies.refreshToken) {
-        const refreshTokenObj = await RefreshToken.findOne({
-          token: req.cookies.refreshToken,
-        });
-        if (!refreshTokenObj || !refreshTokenObj.isActive) {
-          // when refresh token is invalid
-          return next();
-        }
-        currentUser = await User.findById(refreshTokenObj.user);
-        // create new jwtToken
-        const {
-          jwtToken: newJwtToken,
-          jwtCookieOptions,
-        } = createJwtAndCookieOptions(currentUser, req.ip);
-
-        // send new jwtToken as cookie
-        res.cookie('jwtToken', newJwtToken, jwtCookieOptions);
-
-        // THERE IS A LOGGED IN USER
-        res.locals.user = currentUser;
-        req.user = currentUser;
-        return next();
-      }
-
-      return next();
     }
+
+    next();
   }
-  next();
 };
 
 exports.restrictTo = (...roles) => {
