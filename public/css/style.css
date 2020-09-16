@@ -1346,6 +1346,10 @@ body {
   font-size: 3rem;
 }
 
+#rating-edit {
+  width: 200px;
+}
+
 .rating > label {
   float: right;
   display: inline;
@@ -1355,6 +1359,10 @@ body {
   width: 2.1em;
   cursor: pointer;
   color: #000;
+}
+
+#rating-edit > label {
+  width: 1em;
 }
 
 .rating > label:hover,
@@ -1387,8 +1395,11 @@ textarea {
   border: 1px solid #ccc;
   box-shadow: 1px 1px 1px #999;
   margin: 0px;
-  width: 771px;
   height: 160px;
+}
+
+#review-text {
+  width: 771px;
 }
 
 .textarea-label {

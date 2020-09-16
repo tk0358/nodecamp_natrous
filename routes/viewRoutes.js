@@ -30,6 +30,12 @@ router.get(
 );
 router.get('/my-reviews', authController.protect, viewsController.getMyReviews);
 
+router.get(
+  '/reviews/:id/edit',
+  authController.protect,
+  viewsController.getReviewEditForm
+);
+
 router.post(
   '/submit-user-data',
   authController.protect,

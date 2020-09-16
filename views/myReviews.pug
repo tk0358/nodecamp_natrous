@@ -23,4 +23,4 @@ block content
                 //- 3/5
                 svg.reviews__star(class=`reviews__star--${review.rating >= star ? 'active' : 'inactive'}`)
                   use(xlink:href='/img/icons.svg#icon-star')
-            a.btn.btn--green.btn--small.edit-review(data-review-id=`${review.id}`) Edit
+            a.btn.btn--green.btn--small.edit-review(href=`/reviews/${review.id}/edit`) Edit

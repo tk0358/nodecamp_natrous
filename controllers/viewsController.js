@@ -136,6 +136,17 @@ exports.getMyReviews = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getReviewEditForm = catchAsync(async (req, res, next) => {
+  const review = await Review.findById(req.params.id).populate({
+    path: 'tour',
+    select: 'imageCover name',
+  });
+
+  res.status(200).render('reviewEdit', {
+    review,
+  });
+});
+
 exports.updateUserData = catchAsync(async (req, res, next) => {
   console.log(req.body);
   console.log(req.file);

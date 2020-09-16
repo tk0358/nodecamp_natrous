@@ -4,7 +4,7 @@ import { displayMap } from './mapbox';
 import { login, logout, signup } from './login';
 import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
-import { createReview } from './createReview';
+import { createReview, updateReview } from './review';
 import { createLike, deleteLike } from './like';
 
 // DOM ELEMENTS
@@ -17,7 +17,7 @@ const userPasswordForm = document.querySelector('.form-user-password');
 const bookBtns = document.querySelectorAll('.book-tour');
 const reviewForm = document.querySelector('.review-form');
 const heartBtn = document.getElementById('heart');
-const editReviewBtns = document.querySelectorAll('.edit-review');
+const reviewEditForm = document.getElementById('review-edit-form');
 
 // DELEGATION
 if (mapBox) {
@@ -94,7 +94,7 @@ if (reviewForm)
     const review = document.getElementById('review-text').value;
     const user = document.getElementById('review-user').dataset.userId;
     const tour = document.getElementById('review-user').dataset.tourId;
-    // console.log(rating, review, user, tour);
+    console.log(rating, review, user, tour);
     createReview(rating, review, user, tour);
   });
 
@@ -113,25 +113,11 @@ if (heartBtn)
     }
   });
 
-if (editReviewBtns)
-  editReviewBtns.forEach(btn =>
-    btn.addEventListener('click', e => {
-      e.preventDefault();
-
-      // const xhr = new XMLHttpRequest();
-      // const el = e.target.parentNode.parentNode;
-      // xhr.open('GET', '/view/editReview.html', true);
-      // xhr.onload = function () {
-      //   if (this.status == 200) {
-      //     e.target.parentNode.parentNode.childNodes[1].innerHTML =
-      //       '<textarea id=review-text name="review-text" rows="10" cols="40"></textarea>';
-      //   }
-      // };
-      // xhr.send();
-      const review =
-        e.target.parentNode.parentNode.childNodes[1].lastChild.textContent;
-      e.target.parentNode.parentNode.childNodes[1].innerHTML = `<textarea id=review-text name="review-text">${review}</textarea>`;
-      console.log('Btn is clicked!');
-      console.log(e.target.parentNode.parentNode);
-    })
-  );
+if (reviewEditForm)
+  reviewEditForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const reviewId = reviewEditForm.dataset.reviewId;
+    const rating = reviewEditForm.star.value;
+    const review = document.getElementById('reviwe-edit').value;
+    updateReview(reviewId, rating, review);
+  });
