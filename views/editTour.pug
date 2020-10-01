@@ -1,0 +1,67 @@
+extends base
+
+block content
+  main.main
+    .login-form
+      h2.heading-secondary.ma-bt-lg= `${tour.name} Edit Page`
+      form.form.form--login
+        .form__group
+          label.form__label(for='name') name
+          input#name.form__input(type='text', value=`${tour.name}`, required)
+        .form__group
+          label.form__label(for='summary') summary
+          input#summary.form__input(type='text', value=`${tour.summary}`, required)
+        .form__group
+          label.form__label(for='description') description
+          textarea#description.form__input(required)= tour.description
+        .form__group
+          label.form__label(for='price') price
+          input#price.form__input(type='text', value=`${tour.price}`, required)
+        .form__group
+          label.form__label(for='difficulty') difficulty
+          input#difficulty.form__input(type='text', value=`${tour.difficulty}`, required)
+        .form__group
+          label.form__label(for='duration') duration
+          input#duration.form__input(type='text', value=`${tour.duration}`, required)
+        .form__group
+          label.form__label(for='maxGroupSize') maxGroupSize
+          input#maxGroupSize.form__input(type='text', value=`${tour.maxGroupSize}`, required)
+        .form__group
+          label.form__label(for='imageCover') imageCover
+          input#imageCover.form__input(type='text', value=`${tour.imageCover}`, required)
+        .form__group
+          label.form__label(for='images0') images
+          input#images0.form__input(type='text', value=`${tour.images[0]}`)
+          input#images1.form__input(type='text', value=`${tour.images[1]}`)
+          input#images2.form__input(type='text', value=`${tour.images[2]}`)
+        .form__group
+          label.form__label(for='ratingsAverage') ratingsAverage
+          input#ratingsAverage.form__input(type='text', value=`${tour.ratingsAverage}`)
+        .form__group
+          label.form__label(for='ratingsQuantity') ratingsQuantity
+          input#ratingsQuantity.form__input(type='text', value=`${tour.ratingsQuantity}`)
+        //- .form__group
+        //-   label.form__label(for='startDate0') startDates
+        //-   each startDate, index in tour.startDates
+        //-     input.form__input(id=`startDate${index}`, type='text', value=`${startDate.startDate}`, required)
+        each startDate, index in tour.startDates
+          .form__group
+            label.form__label(for=`startDate${index}`)= `startDate${index+1}`
+            label.form__label-small(for=`startDate${index}`) startDate
+            input.form__input(id=`startDate${index}`, type='text', value=`${startDate.startDate}`)
+            label.form__label-small(for=`participant${index}`) participant
+            input.form__input(id=`participant${index}`, type='text', value=`${startDate.participant}`)
+            label.form__label-small(for=`soldOut${index}`) soldOut
+            input.form__input(id=`soldOut${index}`, type='text', value=`${startDate.soldOut}`)
+            
+        //- .form__group
+        //-   label.form__label(for='price') price
+        //-   input#price.form__input(type='text', value=`${tour.price}`, required)
+        //- .form__group
+        //-   label.form__label(for='price') price
+        //-   input#price.form__input(type='text', value=`${tour.price}`, required)
+        //- .form__group
+        //-   label.form__label(for='price') price
+        //-   input#price.form__input(type='text', value=`${tour.price}`, required)
+        .form__group
+          button.btn.btn--green Update

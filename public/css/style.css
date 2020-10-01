@@ -238,6 +238,22 @@ body {
   background-color: #55c57a;
 }
 
+.btn--yellow {
+  background-color: #e7da60;
+  color: #fff;
+}
+.btn--yellow::after {
+  background-color: #e7da60;
+}
+
+.btn--red {
+  background-color: #d63030;
+  color: #fff;
+}
+.btn--red::after {
+  background-color: #d63030;
+}
+
 .btn--small {
   padding: 1.25rem 3rem !important;
   font-size: 1.4rem !important;
@@ -1273,6 +1289,13 @@ body {
   margin-bottom: 0.75rem;
 }
 
+.form__label-small {
+  display: block;
+  font-size: 1rem;
+  font-weight: 300;
+  margin-bottom: 0.35rem;
+}
+
 .form__photo-upload {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1467,4 +1490,43 @@ textarea {
   height: 150px;
   width: 300px;
   box-sizing: border-box;
+}
+
+/* Admin manage pages */
+.manage-menu {
+  list-style: none;
+  font-size: 2rem;
+  margin-left: 30px;
+}
+
+.tours-table {
+  width: 600px;
+}
+
+.tours-table th {
+  padding: 20px 10px;
+  width: 220px;
+}
+
+.tours-table td {
+  padding: 20px 10px;
+  width: 220px;
+}
+
+.tours-table th:nth-of-type(1) {
+  width: 30%;
+}
+
+.tours-table td:nth-of-type(1) {
+  width: 30%;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.tours-table th:nth-of-type(2) {
+  width: 70%;
+}
+
+.tours-table td:nth-of-type(2) {
+  width: 70%;
 }

@@ -14,11 +14,33 @@ router.get(
 );
 
 router.get(
+  '/manage',
+  authController.isLoggedIn,
+  authController.restrictTo('admin'),
+  viewsController.getManageMenu
+);
+
+router.get(
+  '/manage/tours',
+  authController.isLoggedIn,
+  authController.restrictTo('admin'),
+  viewsController.getTourManage
+);
+
+router.get(
   '/tour/:slug',
   authController.isLoggedIn,
   // viewsController.canReviewThisTour,
   viewsController.getTour
 );
+
+router.get(
+  '/tour/:slug/edit',
+  authController.isLoggedIn,
+  authController.restrictTo('admin'),
+  viewsController.getEditTour
+);
+
 router.get('/login', authController.isLoggedIn, viewsController.getLoginForm);
 router.get('/signup', authController.isLoggedIn, viewsController.getSignupForm);
 router.get('/me', authController.protect, viewsController.getAccount);

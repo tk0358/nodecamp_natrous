@@ -76,6 +76,15 @@ exports.getTour = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getEditTour = catchAsync(async (req, res) => {
+  const tour = await Tour.findOne({ slug: req.params.slug });
+
+  res.status(200).render('editTour', {
+    title: `Edit ${tour.name} Tour`,
+    tour,
+  });
+});
+
 exports.getLoginForm = (req, res, next) => {
   res.status(200).render('login', {
     title: 'Log into your account',
@@ -166,5 +175,19 @@ exports.updateUserData = catchAsync(async (req, res, next) => {
   res.status(200).render('account', {
     title: 'Your account',
     user: updatedUser,
+  });
+});
+
+exports.getManageMenu = (req, res) => {
+  res.status(200).render('manage', {
+    title: 'Manage Menu',
+  });
+};
+
+exports.getTourManage = catchAsync(async (req, res) => {
+  const tours = await Tour.find();
+  res.status(200).render('tourManage', {
+    tours,
+    title: 'Tour Manage Page',
   });
 });

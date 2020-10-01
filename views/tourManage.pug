@@ -1,0 +1,15 @@
+extends base
+
+block content
+  h1 Tour Manage Page
+  table.tours-table 
+    tr
+      th name
+      th actions
+    each tour in tours
+      tr
+        td.tour-name= tour.name
+        td
+          a.btn.btn--green.btn--small(href=`/tour/${tour.slug}`) Show
+          a.btn.btn--yellow.btn--small(href=`/tour/${tour.slug}/edit`) Edit
+          a.btn.btn--red.btn--small(href=`/tour/${tour.slug}`) Delete
