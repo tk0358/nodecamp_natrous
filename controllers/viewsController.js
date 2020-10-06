@@ -82,6 +82,7 @@ exports.getEditTour = catchAsync(async (req, res) => {
   res.status(200).render('editTour', {
     title: `Edit ${tour.name} Tour`,
     tour,
+    id: tour.id,
   });
 });
 

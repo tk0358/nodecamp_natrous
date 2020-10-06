@@ -6,6 +6,7 @@ import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
 import { createReview, updateReview } from './review';
 import { createLike, deleteLike } from './like';
+import { updateTour } from './updateTour';
 
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
@@ -22,6 +23,7 @@ const addDateBtn = document.getElementById('add-date-button');
 const deleteDateBtn = document.getElementById('delete-date-button');
 const addLocBtn = document.getElementById('add-loc-button');
 const deleteLocBtn = document.getElementById('delete-loc-button');
+const updateTourForm = document.getElementById('form--edit-tour');
 
 // DELEGATION
 if (mapBox) {
@@ -216,4 +218,65 @@ if (deleteLocBtn)
     } else if (count === 1) {
       deleteLocBtn.disabled = true;
     }
+  });
+
+if (updateTourForm)
+  updateTourForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const tourId = updateTourForm.dataset.id;
+    const form = new FormData();
+    form.append('name', document.getElementById('name').value);
+    form.append('summary', document.getElementById('summary').value);
+    form.append('description', document.getElementById('description').value);
+    form.append('price', document.getElementById('price').value);
+    form.append('difficulty', document.getElementById('difficulty').value);
+    form.append('duration', document.getElementById('duration').value);
+    form.append('maxGroupSize', document.getElementById('maxGroupSize').value);
+    form.append('imageCover', document.getElementById('imageCover').value);
+    form.append('images', document.getElementById('images0').value);
+    form.append('images', document.getElementById('images1').value);
+    form.append('images', document.getElementById('images2').value);
+    form.append(
+      'ratingsAverage',
+      document.getElementById('ratingsAverage').value
+    );
+    form.append(
+      'ratingsQuantity',
+      document.getElementById('ratingsQuantity').value
+    );
+    document.querySelectorAll('.form__group-startDate').forEach((el, i) => {
+      form.append(`startDates[${i}][startDate]`, el.children[2].value);
+      form.append(`startDates[${i}][participant]`, el.children[4].value);
+      form.append(`startDates[${i}][soldOut]`, el.children[6].value);
+    });
+    form.append(
+      'startLocation[coordinates][0]',
+      document.getElementById('startloc-ew').value
+    );
+    form.append(
+      'startLocation[coordinates][1]',
+      document.getElementById('startloc-ns').value
+    );
+    form.append(
+      'startLocation[address]',
+      document.getElementById('address').value
+    );
+    form.append(
+      'startLocation[description]',
+      document.getElementById('startloc-description').value
+    );
+    form.append('startLocation[type]', 'Point');
+
+    document.querySelectorAll('.form__group-location').forEach((el, i) => {
+      form.append(`locations[${i}][type]`, 'Point');
+      form.append(`locations[${i}][coordinates][0]`, el.children[2].value);
+      form.append(`locations[${i}][coordinates][1]`, el.children[4].value);
+      form.append(`locations[${i}][description]`, el.children[6].value);
+      form.append(`locations[${i}][day]`, el.children[8].value);
+    });
+
+    // console.log(...form.entries());
+    // console.log(form.getAll('images'));
+
+    updateTour(form, tourId);
   });
