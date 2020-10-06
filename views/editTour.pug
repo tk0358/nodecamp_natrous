@@ -2,9 +2,9 @@ extends base
 
 block content
   main.main
-    .login-form
+    .edit-tour-form
       h2.heading-secondary.ma-bt-lg= `${tour.name} Edit Page`
-      form.form.form--login
+      form.form.form--edit-tour
         .form__group
           label.form__label(for='name') name
           input#name.form__input(type='text', value=`${tour.name}`, required)
@@ -44,15 +44,45 @@ block content
         //-   label.form__label(for='startDate0') startDates
         //-   each startDate, index in tour.startDates
         //-     input.form__input(id=`startDate${index}`, type='text', value=`${startDate.startDate}`, required)
-        each startDate, index in tour.startDates
-          .form__group
-            label.form__label(for=`startDate${index}`)= `startDate${index+1}`
-            label.form__label-small(for=`startDate${index}`) startDate
-            input.form__input(id=`startDate${index}`, type='text', value=`${startDate.startDate}`)
-            label.form__label-small(for=`participant${index}`) participant
-            input.form__input(id=`participant${index}`, type='text', value=`${startDate.participant}`)
-            label.form__label-small(for=`soldOut${index}`) soldOut
-            input.form__input(id=`soldOut${index}`, type='text', value=`${startDate.soldOut}`)
+        #form__startDates
+          each startDate, index in tour.startDates
+            .form__group.form__group-startDate
+              label.form__label(for=`startDate${index}`)= `startDate${index+1}`
+              label.form__label-small(for=`startDate${index}`) startDate
+              input.form__input(id=`startDate${index}`, type='text', value=`${startDate.startDate}`)
+              label.form__label-small(for=`participant${index}`) participant
+              input.form__input(id=`participant${index}`, type='text', value=`${startDate.participant}`)
+              label.form__label-small(for=`soldOut${index}`) soldOut
+              input.form__input(id=`soldOut${index}`, type='text', value=`${startDate.soldOut}`)
+        button#add-date-button +
+        button#delete-date-button -
+        span.btnCapture add/remove startDate
+        .form__group
+          label.form__label(for="startloc-ew") startLocation
+          label.form__label-small(for="startloc-ew") coordinates(east+/west-)
+          input.form__input#startloc-ew(type='text', value=`${tour.startLocation.coordinates[0]}`)
+          label.form__label-small(for="startloc-ns") coordinates(north+/south-)
+          input.form__input#startloc-ns(type='text', value=`${tour.startLocation.coordinates[1]}`)
+          label.form__label-small(for="address") address
+          input.form__input#address(type='text', value=`${tour.startLocation.address}`)
+          label.form__label-small(for="description") description
+          input.form__input#description(type='text', value=`${tour.startLocation.description}`)
+        #form__locations
+          each location, index in tour.locations
+            .form__group.form__group-location
+              label.form__label(for=`coordinates-ew-${index}`)= `location${index+1}`
+              label.form__label-small(for=`coordinates-ew-${index}`) coordinates(east+/west-)
+              input.form__input(id=`coordinates-ew-${index}`, type='text', value=`${location.coordinates[0]}`)
+              label.form__label-small(for=`coordinates-ns-${index}`) coordinates(north+/south-)
+              input.form__input(id=`coordinates-ns-${index}`, type='text', value=`${location.coordinates[1]}`)
+              label.form__label-small(for=`description${index}`) description
+              input.form__input(id=`description${index}`, type='text', value=`${location.description}`)
+              label.form__label-small(for=`day${index}`) day
+              input.form__input(id=`day${index}`, type='text', value=`${location.day}`)
+        button#add-loc-button +
+        button#delete-loc-button -
+        span.btnCapture add/remove location
+
             
         //- .form__group
         //-   label.form__label(for='price') price
@@ -64,4 +94,4 @@ block content
         //-   label.form__label(for='price') price
         //-   input#price.form__input(type='text', value=`${tour.price}`, required)
         .form__group
-          button.btn.btn--green Update
+          button.btn.btn--green#btn--update-tour Update

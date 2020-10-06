@@ -18,6 +18,10 @@ const bookBtns = document.querySelectorAll('.book-tour');
 const reviewForm = document.querySelector('.review-form');
 const heartBtn = document.getElementById('heart');
 const reviewEditForm = document.getElementById('review-edit-form');
+const addDateBtn = document.getElementById('add-date-button');
+const deleteDateBtn = document.getElementById('delete-date-button');
+const addLocBtn = document.getElementById('add-loc-button');
+const deleteLocBtn = document.getElementById('delete-loc-button');
 
 // DELEGATION
 if (mapBox) {
@@ -120,4 +124,96 @@ if (reviewEditForm)
     const rating = reviewEditForm.star.value;
     const review = document.getElementById('reviwe-edit').value;
     updateReview(reviewId, rating, review);
+  });
+
+// button to add input fields for startDate
+if (addDateBtn)
+  addDateBtn.addEventListener('click', e => {
+    e.preventDefault();
+    const formStartDates = document.getElementById('form__startDates');
+    let count = formStartDates.childElementCount;
+    // console.log(count);
+    const el = `
+      <div class="form__group form__group-startDate">
+        <label class="form__label" for="startDate${count}">startDate${
+      count + 1
+    }</label>
+        <label class="form__label-small" for="startDate${count}">startDate</label>
+        <input class="form__input" id="startDate${count}" type="text">
+        <label class="form__label-small" for="participant${count}">participant</label>
+        <input class="form__input" id="participant${count}" type="text">
+        <label class="form__label-small" for="soldOut${count}">soldOut</label>
+        <input class="form__input" id="soldOut${count}" type="text">
+      </div>
+    `;
+    formStartDates.insertAdjacentHTML('beforeend', el);
+    count = formStartDates.childElementCount;
+    if (count === 10) {
+      addDateBtn.disabled = true;
+    } else if (count === 2) {
+      deleteDateBtn.disabled = false;
+    }
+  });
+
+if (deleteDateBtn)
+  deleteDateBtn.addEventListener('click', e => {
+    e.preventDefault();
+    const startDateGroups = document.getElementsByClassName(
+      'form__group-startDate'
+    );
+    // console.log(startDateGroups);
+    const formStartDates = document.getElementById('form__startDates');
+    formStartDates.removeChild(startDateGroups[startDateGroups.length - 1]);
+    const count = formStartDates.childElementCount;
+    if (count === 9) {
+      addDateBtn.disabled = false;
+    } else if (count === 1) {
+      deleteDateBtn.disabled = true;
+    }
+  });
+
+if (addLocBtn)
+  addLocBtn.addEventListener('click', e => {
+    e.preventDefault();
+    const formlocations = document.getElementById('form__locations');
+    let count = formlocations.childElementCount;
+    // console.log(count);
+    const el = `
+      <div class="form__group form__group-location">
+        <label class="form__label" for="coordinates-ew-${count}">locations${
+      count + 1
+    }</label>
+        <label class="form__label-small" for="coordinates-ew-${count}">coordinates(east+/west-)</label>
+        <input class="form__input" id="coordinates-ew-${count}" type="text">
+        <label class="form__label-small" for="coordinates-ns-${count}">coordinates(north+/south-)</label>
+        <input class="form__input" id="coordinates-ns-${count}" type="text">
+        <label class="form__label-small" for="description${count}">description</label>
+        <input class="form__input" id="description${count}" type="text">
+        <label class="form__label-small" for="day${count}">day</label>
+        <input class="form__input" id="day${count}" type="text">
+      </div>
+    `;
+    formlocations.insertAdjacentHTML('beforeend', el);
+    count = formlocations.childElementCount;
+    if (count === 10) {
+      addLocBtn.disabled = true;
+    } else if (count === 2) {
+      deleteLocBtn.disabled = false;
+    }
+  });
+
+if (deleteLocBtn)
+  deleteLocBtn.addEventListener('click', e => {
+    e.preventDefault();
+    const formlocations = document.getElementById('form__locations');
+    const locationGroups = document.getElementsByClassName(
+      'form__group-location'
+    );
+    formlocations.removeChild(locationGroups[locationGroups.length - 1]);
+    const count = formlocations.childElementCount;
+    if (count === 9) {
+      addLocBtn.disabled = false;
+    } else if (count === 1) {
+      deleteLocBtn.disabled = true;
+    }
   });

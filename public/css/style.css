@@ -1237,7 +1237,8 @@ body {
   margin: 0 auto;
 }
 
-.login-form {
+.login-form,
+.edit-tour-form {
   margin: 0 auto;
   max-width: 55rem;
   background-color: #fff;
@@ -1529,4 +1530,32 @@ textarea {
 
 .tours-table td:nth-of-type(2) {
   width: 70%;
+}
+
+#add-date-button,
+#delete-date-button,
+#add-loc-button,
+#delete-loc-button {
+  margin: 8px 8px 20px;
+  font-size: 2rem;
+}
+
+#add-date-button,
+#add-loc-button {
+  padding: 5px;
+}
+
+#delete-date-button,
+#delete-loc-button {
+  padding: 5px 8px;
+}
+
+.btnCapture {
+  font-size: 2rem;
+  color: green;
+  margin-left: 10px;
+}
+
+#btn--update-tour {
+  margin-top: 20px;
 }
