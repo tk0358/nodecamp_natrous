@@ -238,6 +238,15 @@ body {
   background-color: #55c57a;
 }
 
+.btn--blue {
+  background-color: skyblue;
+  color: #fff;
+}
+
+.btn--blue::after {
+  background-color: skyblue;
+}
+
 .btn--yellow {
   background-color: #e7da60;
   color: #fff;
@@ -1558,4 +1567,15 @@ textarea {
 
 #btn--update-tour {
   margin-top: 20px;
+}
+
+#btn--new-tour {
+  width: 200px;
+  position: absolute;
+  left: 220px;
+  top: 120px;
+}
+
+.margin-top-10px {
+  margin-top: 10px;
 }

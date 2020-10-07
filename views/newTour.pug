@@ -1,0 +1,80 @@
+extends base
+
+block content
+  main.main
+    .edit-tour-form
+      h2.heading-secondary.ma-bt-lg Create New Tour
+      form.form#form--create-tour
+        .form__group
+          label.form__label(for='name') name
+          input#name.form__input(type='text', required)
+        .form__group
+          label.form__label(for='summary') summary
+          input#summary.form__input(type='text', required)
+        .form__group
+          label.form__label(for='description') description
+          textarea#description.form__input(required)
+        .form__group
+          label.form__label(for='price') price
+          input#price.form__input(type='text', required)
+        .form__group
+          label.form__label(for='difficulty') difficulty
+          input#difficulty.form__input(type='text', required)
+        .form__group
+          label.form__label(for='duration') duration
+          input#duration.form__input(type='text', required)
+        .form__group
+          label.form__label(for='maxGroupSize') maxGroupSize
+          input#maxGroupSize.form__input(type='text', required)
+        .form__group
+          label.form__label(for='imageCover') imageCover
+          input#imageCover.form__input(type='text', required)
+        .form__group
+          label.form__label(for='images0') images
+          input#images0.form__input(type='text')
+          input#images1.form__input(type='text')
+          input#images2.form__input(type='text')
+        .form__group
+          label.form__label(for='ratingsAverage') ratingsAverage
+          input#ratingsAverage.form__input(type='text')
+        .form__group
+          label.form__label(for='ratingsQuantity') ratingsQuantity
+          input#ratingsQuantity.form__input(type='text')
+        #form__startDates
+          .form__group.form__group-startDate
+            label.form__label(for='startDate0') startDate1
+            label.form__label-small(for='startDate0') startDate
+            input.form__input(id='startDate0', type='text')
+            label.form__label-small(for='participant0') participant
+            input.form__input(id='participant0', type='text')
+            label.form__label-small(for='soldOut0') soldOut
+            input.form__input(id='soldOut0', type='text')
+        button#add-date-button +
+        button#delete-date-button -
+        span.btnCapture add/remove startDate
+        .form__group
+          label.form__label(for="startloc-ew") startLocation
+          label.form__label-small(for="startloc-ew") coordinates(east+/west-)
+          input.form__input#startloc-ew(type='text')
+          label.form__label-small(for="startloc-ns") coordinates(north+/south-)
+          input.form__input#startloc-ns(type='text')
+          label.form__label-small(for="address") address
+          input.form__input#address(type='text')
+          label.form__label-small(for="description") description
+          input.form__input#startloc-description(type='text')
+        #form__locations
+          .form__group.form__group-location
+            label.form__label(for='coordinates-ew-0') location1
+            label.form__label-small(for='coordinates-ew-0') coordinates(east+/west-)
+            input.form__input(id='coordinates-ew-0', type='text')
+            label.form__label-small(for='coordinates-ns-0') coordinates(north+/south-)
+            input.form__input(id='coordinates-ns-0', type='text')
+            label.form__label-small(for='description0') description
+            input.form__input(id='description0', type='text')
+            label.form__label-small(for='day0') day
+            input.form__input(id='day0', type='text')
+        button#add-loc-button +
+        button#delete-loc-button -
+        span.btnCapture add/remove location
+        .form__group
+          button.btn.btn--green#btn--create-tour Create New Tour

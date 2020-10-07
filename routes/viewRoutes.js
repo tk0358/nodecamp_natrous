@@ -28,6 +28,13 @@ router.get(
 );
 
 router.get(
+  '/tour/new',
+  authController.isLoggedIn,
+  authController.restrictTo('admin'),
+  viewsController.getNewTour
+);
+
+router.get(
   '/tour/:slug',
   authController.isLoggedIn,
   // viewsController.canReviewThisTour,
