@@ -8,9 +8,9 @@ block content
       th name
       th actions
     each tour in tours
-      tr
+      tr(id=`${tour.id}`)
         td.tour-name= tour.name
         td
           a.btn.btn--green.btn--small(href=`/tour/${tour.slug}`) Show
           a.btn.btn--yellow.btn--small(href=`/tour/${tour.slug}/edit`) Edit
-          a.btn.btn--red.btn--small(href=`/tour/${tour.slug}`) Delete
+          button.btn.btn--red.btn--small.btn--delete-tour Delete

@@ -6,7 +6,7 @@ import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
 import { createReview, updateReview } from './review';
 import { createLike, deleteLike } from './like';
-import { updateTour, createTour } from './tour';
+import { updateTour, createTour, deleteTour } from './tour';
 
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
@@ -25,6 +25,7 @@ const addLocBtn = document.getElementById('add-loc-button');
 const deleteLocBtn = document.getElementById('delete-loc-button');
 const updateTourForm = document.getElementById('form--edit-tour');
 const createTourForm = document.getElementById('form--create-tour');
+const deleteTourBtns = document.querySelectorAll('.btn--delete-tour');
 
 // DELEGATION
 if (mapBox) {
@@ -290,4 +291,13 @@ if (createTourForm)
   createTourForm.addEventListener('submit', e => {
     e.preventDefault();
     createTour(getFormInfo());
+  });
+
+if (deleteTourBtns)
+  deleteTourBtns.forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      const tourId = e.target.parentNode.parentNode.id;
+      deleteTour(tourId);
+    });
   });
