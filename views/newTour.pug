@@ -19,7 +19,11 @@ block content
           input#price.form__input(type='text', required)
         .form__group
           label.form__label(for='difficulty') difficulty
-          input#difficulty.form__input(type='text', required)
+          select#difficulty.form__input(name='difficulty' required)
+            option(value="") choose difficulty
+            option(value="easy") easy
+            option(value="medium") medium
+            option(value="difficult") difficult
         .form__group
           label.form__label(for='duration') duration
           input#duration.form__input(type='text', required)

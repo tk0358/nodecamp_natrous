@@ -19,7 +19,12 @@ block content
           input#price.form__input(type='text', value=`${tour.price}`, required)
         .form__group
           label.form__label(for='difficulty') difficulty
-          input#difficulty.form__input(type='text', value=`${tour.difficulty}`, required)
+          select#difficulty.form__input.selectbox--difficulty-edit(name='difficulty' required data-difficulty=`${tour.difficulty}`)
+            option(value="") choose difficulty
+            option(value="easy") easy
+            option(value="medium") medium
+            option(value="difficult") difficult
+          //- input#difficulty.form__input(type='text', value=`${tour.difficulty}`, required)
         .form__group
           label.form__label(for='duration') duration
           input#duration.form__input(type='text', value=`${tour.duration}`, required)

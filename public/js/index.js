@@ -26,6 +26,9 @@ const deleteLocBtn = document.getElementById('delete-loc-button');
 const updateTourForm = document.getElementById('form--edit-tour');
 const createTourForm = document.getElementById('form--create-tour');
 const deleteTourBtns = document.querySelectorAll('.btn--delete-tour');
+const selectBoxDifficultyEdit = document.querySelector(
+  '.selectbox--difficulty-edit'
+);
 
 // DELEGATION
 if (mapBox) {
@@ -312,3 +315,17 @@ if (deleteTourBtns)
       deleteTour(tourId);
     });
   });
+
+// EditTourにおいて、difficultyのselectBoxに初期値を設定する
+if (selectBoxDifficultyEdit) {
+  // console.log(selectBoxDifficultyEdit.options);
+  const val = selectBoxDifficultyEdit.dataset.difficulty;
+  console.log(val);
+  if (val === 'easy') {
+    selectBoxDifficultyEdit.options[1].selected = true;
+  } else if (val === 'medium') {
+    selectBoxDifficultyEdit.options[2].selected = true;
+  } else {
+    selectBoxDifficultyEdit.options[3].selected = true;
+  }
+}
