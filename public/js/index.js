@@ -237,14 +237,6 @@ const appendFormInfo = (form, type) => {
   form.append('duration', document.getElementById('duration').value);
   form.append('maxGroupSize', document.getElementById('maxGroupSize').value);
 
-  form.append(
-    'ratingsAverage',
-    document.getElementById('ratingsAverage').value
-  );
-  form.append(
-    'ratingsQuantity',
-    document.getElementById('ratingsQuantity').value
-  );
   document.querySelectorAll('.form__group-startDate').forEach((el, i) => {
     form.append(`startDates[${i}][startDate]`, el.children[2].value);
     form.append(`startDates[${i}][participant]`, el.children[4].value);
@@ -275,8 +267,16 @@ const appendFormInfo = (form, type) => {
     form.append(`locations[${i}][description]`, el.children[6].value);
     form.append(`locations[${i}][day]`, el.children[8].value);
   });
-  // updateでは画像をアップロードすることも可能
+  // updateでは, ratingsAverage, ratingsQuantityの欄があり、画像をアップロードすることも可能
   if (type === 'update') {
+    form.append(
+      'ratingsAverage',
+      document.getElementById('ratingsAverage').value
+    );
+    form.append(
+      'ratingsQuantity',
+      document.getElementById('ratingsQuantity').value
+    );
     const imageCover = document.getElementById('imageCover').files[0];
     const images = document.getElementById('images').files;
     console.log(images);
@@ -298,7 +298,7 @@ if (updateTourForm)
     let form = new FormData();
     form = appendFormInfo(form, 'update');
 
-    console.log(...form.entries());
+    // console.log(...form.entries());
 
     updateTour(form, tourId);
   });

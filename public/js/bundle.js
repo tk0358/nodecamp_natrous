@@ -9650,8 +9650,6 @@ var appendFormInfo = function appendFormInfo(form, type) {
   form.append('difficulty', document.getElementById('difficulty').value);
   form.append('duration', document.getElementById('duration').value);
   form.append('maxGroupSize', document.getElementById('maxGroupSize').value);
-  form.append('ratingsAverage', document.getElementById('ratingsAverage').value);
-  form.append('ratingsQuantity', document.getElementById('ratingsQuantity').value);
   document.querySelectorAll('.form__group-startDate').forEach(function (el, i) {
     form.append("startDates[".concat(i, "][startDate]"), el.children[2].value);
     form.append("startDates[".concat(i, "][participant]"), el.children[4].value);
@@ -9668,9 +9666,11 @@ var appendFormInfo = function appendFormInfo(form, type) {
     form.append("locations[".concat(i, "][coordinates][1]"), el.children[4].value);
     form.append("locations[".concat(i, "][description]"), el.children[6].value);
     form.append("locations[".concat(i, "][day]"), el.children[8].value);
-  }); // updateでは画像をアップロードすることも可能
+  }); // updateでは, ratingsAverage, ratingsQuantityの欄があり、画像をアップロードすることも可能
 
   if (type === 'update') {
+    form.append('ratingsAverage', document.getElementById('ratingsAverage').value);
+    form.append('ratingsQuantity', document.getElementById('ratingsQuantity').value);
     var imageCover = document.getElementById('imageCover').files[0];
     var images = document.getElementById('images').files;
     console.log(images);
@@ -9687,14 +9687,10 @@ var appendFormInfo = function appendFormInfo(form, type) {
 };
 
 if (updateTourForm) updateTourForm.addEventListener('submit', function (e) {
-  var _console;
-
   e.preventDefault();
   var tourId = updateTourForm.dataset.id;
   var form = new FormData();
-  form = appendFormInfo(form, 'update');
-
-  (_console = console).log.apply(_console, _toConsumableArray(form.entries()));
+  form = appendFormInfo(form, 'update'); // console.log(...form.entries());
 
   (0, _tour.updateTour)(form, tourId);
 });
