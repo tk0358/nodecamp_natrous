@@ -50,7 +50,13 @@ block content
               label.form__label-small(for=`participant${index}`) participant
               input.form__input(id=`participant${index}`, type='text', value=`${startDate.participant}`)
               label.form__label-small(for=`soldOut${index}`) soldOut
-              input.form__input(id=`soldOut${index}`, type='text', value=`${startDate.soldOut}`)
+              select.form__input(id=`soldOut${index}`)
+                if startDate.soldOut
+                  option(value="true" selected) true
+                  option(value="false") false
+                else
+                  option(value="true") true
+                  option(value="false" selected) false
         button#add-date-button +
         button#delete-date-button -
         span.btnCapture add/remove startDate

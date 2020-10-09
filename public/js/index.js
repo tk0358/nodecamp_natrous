@@ -150,7 +150,10 @@ if (addDateBtn)
         <label class="form__label-small" for="participant${count}">participant</label>
         <input class="form__input" id="participant${count}" type="text">
         <label class="form__label-small" for="soldOut${count}">soldOut</label>
-        <input class="form__input" id="soldOut${count}" type="text">
+        <select class="form__input" id="soldOut${count}">
+          <option value="true">true</option>
+          <option value="false" selected>false</option>
+        </select>
       </div>
     `;
     formStartDates.insertAdjacentHTML('beforeend', el);
