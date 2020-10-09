@@ -9641,8 +9641,7 @@ if (deleteLocBtn) deleteLocBtn.addEventListener('click', function (e) {
   }
 });
 
-var getFormInfo = function getFormInfo() {
-  var form = new URLSearchParams();
+var appendFormInfo = function appendFormInfo(form, type) {
   form.append('name', document.getElementById('name').value);
   form.append('summary', document.getElementById('summary').value);
   form.append('description', document.getElementById('description').value);
@@ -9650,10 +9649,6 @@ var getFormInfo = function getFormInfo() {
   form.append('difficulty', document.getElementById('difficulty').value);
   form.append('duration', document.getElementById('duration').value);
   form.append('maxGroupSize', document.getElementById('maxGroupSize').value);
-  form.append('imageCover', document.getElementById('imageCover').value);
-  form.append('images', document.getElementById('images0').value);
-  form.append('images', document.getElementById('images1').value);
-  form.append('images', document.getElementById('images2').value);
   form.append('ratingsAverage', document.getElementById('ratingsAverage').value);
   form.append('ratingsQuantity', document.getElementById('ratingsQuantity').value);
   document.querySelectorAll('.form__group-startDate').forEach(function (el, i) {
@@ -9672,20 +9667,40 @@ var getFormInfo = function getFormInfo() {
     form.append("locations[".concat(i, "][coordinates][1]"), el.children[4].value);
     form.append("locations[".concat(i, "][description]"), el.children[6].value);
     form.append("locations[".concat(i, "][day]"), el.children[8].value);
-  });
+  }); // updateでは画像をアップロードすることも可能
+
+  if (type === 'update') {
+    var imageCover = document.getElementById('imageCover').files[0];
+    var images = document.getElementById('images').files;
+    console.log(images);
+    if (imageCover) form.append('imageCover', imageCover);
+
+    if (images) {
+      Array.from(images).forEach(function (image) {
+        form.append('images', image);
+      });
+    }
+  }
+
   return form;
 };
 
 if (updateTourForm) updateTourForm.addEventListener('submit', function (e) {
-  e.preventDefault();
-  var tourId = updateTourForm.dataset.id; // console.log(...form.entries());
-  // console.log(form.getAll('images'));
+  var _console;
 
-  (0, _tour.updateTour)(getFormInfo(), tourId);
+  e.preventDefault();
+  var tourId = updateTourForm.dataset.id;
+  var form = new FormData();
+  form = appendFormInfo(form, 'update');
+
+  (_console = console).log.apply(_console, _toConsumableArray(form.entries()));
+
+  (0, _tour.updateTour)(form, tourId);
 });
 if (createTourForm) createTourForm.addEventListener('submit', function (e) {
   e.preventDefault();
-  (0, _tour.createTour)(getFormInfo());
+  var form = new URLSearchParams();
+  (0, _tour.createTour)(appendFormInfo(form, 'create'));
 });
 if (deleteTourBtns) deleteTourBtns.forEach(function (btn) {
   btn.addEventListener('click', function (e) {

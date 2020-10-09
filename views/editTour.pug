@@ -27,14 +27,6 @@ block content
           label.form__label(for='maxGroupSize') maxGroupSize
           input#maxGroupSize.form__input(type='text', value=`${tour.maxGroupSize}`, required)
         .form__group
-          label.form__label(for='imageCover') imageCover
-          input#imageCover.form__input(type='text', value=`${tour.imageCover}`, required)
-        .form__group
-          label.form__label(for='images0') images
-          input#images0.form__input(type='text', value=`${tour.images[0]}`)
-          input#images1.form__input(type='text', value=`${tour.images[1]}`)
-          input#images2.form__input(type='text', value=`${tour.images[2]}`)
-        .form__group
           label.form__label(for='ratingsAverage') ratingsAverage
           input#ratingsAverage.form__input(type='text', value=`${tour.ratingsAverage}`)
         .form__group
@@ -82,16 +74,31 @@ block content
         button#add-loc-button +
         button#delete-loc-button -
         span.btnCapture add/remove location
-
-            
-        //- .form__group
-        //-   label.form__label(for='price') price
-        //-   input#price.form__input(type='text', value=`${tour.price}`, required)
-        //- .form__group
-        //-   label.form__label(for='price') price
-        //-   input#price.form__input(type='text', value=`${tour.price}`, required)
-        //- .form__group
-        //-   label.form__label(for='price') price
-        //-   input#price.form__input(type='text', value=`${tour.price}`, required)
+        .form__group
+          label.form__label imageCover
+          if tour.imageCover
+            img.img--edit-tour(src=`/img/tours/${tour.imageCover}`)
+            figcaption= tour.imageCover
+            input#imageCover.form__upload(type='file', accept='image/*', name='imageCover')
+            label(for='imageCover') Change imageCover
+          else
+            input#imageCover.form__upload(type='file', accept='image/*', name='imageCover')
+            label(for='imageCover') Add imageCover
+        .form__group
+          label.form__label(for='images0') images
+          if tour.images[0]
+            img.img--edit-tour(src=`/img/tours/${tour.images[0]}`)
+            figcaption= tour.images[0]
+            img.img--edit-tour(src=`/img/tours/${tour.images[1]}`)
+            figcaption= tour.images[1]
+            img.img--edit-tour(src=`/img/tours/${tour.images[2]}`)
+            figcaption= tour.images[2]
+            input#images.form__upload(type='file', accept='image/*', name='images', multiple='multiple')
+            label(for='images') Change images
+            span (select 3 images)
+          else
+            input#images.form__upload(type='file', accept='image/*', name='images', multiple='multiple')
+            label(for='images') Add images
+            span (select 3 images)
         .form__group
           button.btn.btn--green#btn--update-tour Update

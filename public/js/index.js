@@ -222,8 +222,7 @@ if (deleteLocBtn)
     }
   });
 
-const getFormInfo = () => {
-  const form = new URLSearchParams();
+const appendFormInfo = (form, type) => {
   form.append('name', document.getElementById('name').value);
   form.append('summary', document.getElementById('summary').value);
   form.append('description', document.getElementById('description').value);
@@ -231,10 +230,7 @@ const getFormInfo = () => {
   form.append('difficulty', document.getElementById('difficulty').value);
   form.append('duration', document.getElementById('duration').value);
   form.append('maxGroupSize', document.getElementById('maxGroupSize').value);
-  form.append('imageCover', document.getElementById('imageCover').value);
-  form.append('images', document.getElementById('images0').value);
-  form.append('images', document.getElementById('images1').value);
-  form.append('images', document.getElementById('images2').value);
+
   form.append(
     'ratingsAverage',
     document.getElementById('ratingsAverage').value
@@ -273,6 +269,18 @@ const getFormInfo = () => {
     form.append(`locations[${i}][description]`, el.children[6].value);
     form.append(`locations[${i}][day]`, el.children[8].value);
   });
+  // updateでは画像をアップロードすることも可能
+  if (type === 'update') {
+    const imageCover = document.getElementById('imageCover').files[0];
+    const images = document.getElementById('images').files;
+    console.log(images);
+    if (imageCover) form.append('imageCover', imageCover);
+    if (images) {
+      Array.from(images).forEach(image => {
+        form.append('images', image);
+      });
+    }
+  }
   return form;
 };
 
@@ -281,16 +289,19 @@ if (updateTourForm)
     e.preventDefault();
     const tourId = updateTourForm.dataset.id;
 
-    // console.log(...form.entries());
-    // console.log(form.getAll('images'));
+    let form = new FormData();
+    form = appendFormInfo(form, 'update');
 
-    updateTour(getFormInfo(), tourId);
+    console.log(...form.entries());
+
+    updateTour(form, tourId);
   });
 
 if (createTourForm)
   createTourForm.addEventListener('submit', e => {
     e.preventDefault();
-    createTour(getFormInfo());
+    const form = new URLSearchParams();
+    createTour(appendFormInfo(form, 'create'));
   });
 
 if (deleteTourBtns)
