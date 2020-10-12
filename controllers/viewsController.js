@@ -198,3 +198,12 @@ exports.getTourManage = catchAsync(async (req, res) => {
     title: 'Tour Manage Page',
   });
 });
+
+exports.getUserManage = catchAsync(async (req, res) => {
+  const users = await User.find().select('+active').select('+mailConfirm');
+  console.log(users);
+  res.status(200).render('userManage', {
+    users,
+    title: 'User Manage Page',
+  });
+});

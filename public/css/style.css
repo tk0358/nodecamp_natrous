@@ -1569,11 +1569,11 @@ textarea {
   margin-top: 20px;
 }
 
-#btn--new-tour {
+.btn--new {
   width: 200px;
   position: absolute;
   left: 220px;
-  top: 120px;
+  top: -30px;
 }
 
 .margin-top-10px {
@@ -1583,4 +1583,13 @@ textarea {
 .img--edit-tour {
   max-width: 100%;
   height: auto;
+}
+
+.users-table {
+  width: 1100px;
+  font-size: large;
+}
+
+.users-table th {
+  text-align: left;
 }

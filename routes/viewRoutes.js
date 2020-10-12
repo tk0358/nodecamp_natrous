@@ -28,6 +28,13 @@ router.get(
 );
 
 router.get(
+  '/manage/users',
+  authController.isLoggedIn,
+  authController.restrictTo('admin'),
+  viewsController.getUserManage
+);
+
+router.get(
   '/tour/new',
   authController.isLoggedIn,
   authController.restrictTo('admin'),
