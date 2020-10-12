@@ -201,7 +201,7 @@ exports.getTourManage = catchAsync(async (req, res) => {
 
 exports.getUserManage = catchAsync(async (req, res) => {
   const users = await User.find().select('+active').select('+mailConfirm');
-  console.log(users);
+  // console.log(users);
   res.status(200).render('userManage', {
     users,
     title: 'User Manage Page',

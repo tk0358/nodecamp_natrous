@@ -7,6 +7,7 @@ import { bookTour } from './stripe';
 import { createReview, updateReview } from './review';
 import { createLike, deleteLike } from './like';
 import { updateTour, createTour, deleteTour } from './tour';
+import { updateUser } from './user';
 
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
@@ -29,6 +30,8 @@ const deleteTourBtns = document.querySelectorAll('.btn--delete-tour');
 const selectBoxDifficultyEdit = document.querySelector(
   '.selectbox--difficulty-edit'
 );
+const editUserBtns = document.querySelectorAll('.btn--edit-user');
+const updateUserBtn = document.querySelector('.btn--update-user');
 
 // DELEGATION
 if (mapBox) {
@@ -332,3 +335,70 @@ if (selectBoxDifficultyEdit) {
     selectBoxDifficultyEdit.options[3].selected = true;
   }
 }
+
+if (editUserBtns)
+  editUserBtns.forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      const userId = e.target.parentNode.parentNode.id;
+      const name = e.target.parentNode.parentNode.children[0].textContent;
+      const email = e.target.parentNode.parentNode.children[1].textContent;
+      const role = e.target.parentNode.parentNode.children[2].textContent;
+      // query middlewareでactiveがfalseなdocumentは返ってこないので、すべてのdocumentのactiveはtrue
+      // const active = e.target.parentNode.parentNode.children[3].textContent;
+      const mailConfirm =
+        e.target.parentNode.parentNode.children[4].textContent;
+      const updateBtn = document.querySelector('.btn--update-user');
+      // edit => update ボタンへの変更は１か所のみ
+      if (!updateBtn) {
+        e.target.parentNode.parentNode.innerHTML = `
+          <tr id='${userId}'>
+            <td><input type='text' value='${name}'></td>
+            <td><input type='text' value='${email}'></td>
+            <td><select id='role'><option value='user'>user</option><option value='guide'>guide</option><option value='lead-guide'>lead-guide</option><option value='admin'>admin</option></select></td>
+            <td><select><option value='true' selected>true</option><option value='false'>false</option></select></td>
+            <td><select id='mailConfirm'><option value='true'>true</option><option value='false'>false</option></select></td>
+            <td>
+              <button class='btn btn--blue btn--small btn--update-user'>Update</button>
+              <button class='btn btn--green btn--small btn--cancel-user'>Cancel</button>
+            </td>
+          </tr>
+          `;
+        const roleOptions = { user: 0, guide: 1, 'lead-guide': 2, admin: 3 };
+        const roleNum = roleOptions[`${role}`];
+        document.getElementById('role').options[`${roleNum}`].selected = true;
+
+        const mailConfirmOptions = { true: 0, false: 1 };
+        const mailConfirmNum = mailConfirmOptions[`${mailConfirm}`];
+        document.getElementById('mailConfirm').options[
+          `${mailConfirmNum}`
+        ].selected = true;
+
+        document
+          .querySelector('.btn--update-user')
+          .addEventListener('click', updateUserFunc);
+        document
+          .querySelector('.btn--cancel-user')
+          .addEventListener('click', cancelUserFunc);
+      }
+    });
+  });
+
+const updateUserFunc = e => {
+  e.preventDefault();
+  const userId = e.target.parentNode.parentNode.id;
+  const form = new URLSearchParams();
+  const elements = e.target.parentNode.parentNode.children;
+  form.append('name', elements[0].firstChild.value);
+  form.append('email', elements[1].firstChild.value);
+  form.append('role', elements[2].firstChild.value);
+  form.append('active', elements[3].firstChild.value);
+  form.append('mailConfirm', elements[4].firstChild.value);
+  // console.log(...form.entries());
+  updateUser(form, userId);
+};
+
+const cancelUserFunc = e => {
+  e.preventDefault();
+  location.reload(true);
+};
