@@ -53,7 +53,7 @@ export const deleteTour = async tourId => {
     if (res.status === 204) {
       showAlert('success', 'This tour is deleted successfully!');
       window.setTimeout(() => {
-        location.assign('/manage/tours');
+        location.reload(true);
       }, 1500);
     }
   } catch (err) {

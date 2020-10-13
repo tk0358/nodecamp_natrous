@@ -7,7 +7,7 @@ import { bookTour } from './stripe';
 import { createReview, updateReview } from './review';
 import { createLike, deleteLike } from './like';
 import { updateTour, createTour, deleteTour } from './tour';
-import { updateUser } from './user';
+import { updateUser, deleteUser } from './user';
 
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
@@ -31,7 +31,7 @@ const selectBoxDifficultyEdit = document.querySelector(
   '.selectbox--difficulty-edit'
 );
 const editUserBtns = document.querySelectorAll('.btn--edit-user');
-const updateUserBtn = document.querySelector('.btn--update-user');
+const deleteUserBtns = document.querySelectorAll('.btn--delete-user');
 
 // DELEGATION
 if (mapBox) {
@@ -317,8 +317,13 @@ if (deleteTourBtns)
   deleteTourBtns.forEach(btn => {
     btn.addEventListener('click', e => {
       e.preventDefault();
-      const tourId = e.target.parentNode.parentNode.id;
-      deleteTour(tourId);
+      const dialog = window.confirm('本当にこのツアーを削除しますか？');
+      if (dialog) {
+        const tourId = e.target.parentNode.parentNode.id;
+        deleteTour(tourId);
+      } else {
+        location.reload(false);
+      }
     });
   });
 
@@ -384,6 +389,7 @@ if (editUserBtns)
     });
   });
 
+// Updateボタンの機能
 const updateUserFunc = e => {
   e.preventDefault();
   const userId = e.target.parentNode.parentNode.id;
@@ -398,7 +404,24 @@ const updateUserFunc = e => {
   updateUser(form, userId);
 };
 
+// Cancelボタンの機能
 const cancelUserFunc = e => {
   e.preventDefault();
   location.reload(true);
 };
+
+// Deleteボタン
+if (deleteUserBtns)
+  deleteUserBtns.forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      const dialog = window.confirm('本当にこのユーザを削除しますか？');
+      if (dialog) {
+        const userId = e.target.parentNode.parentNode.id;
+        console.log(userId);
+        deleteUser(userId);
+      } else {
+        location.reload(false);
+      }
+    });
+  });
