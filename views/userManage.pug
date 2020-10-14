@@ -10,6 +10,7 @@ block content
       th role
       th active
       th mailConfirm
+      th photo
       th actions
     each user in users
       tr(id=`${user.id}`)
@@ -18,6 +19,8 @@ block content
         td= user.role
         td= user.active
         td= user.mailConfirm
+        td
+          img(src=`/img/users/${user.photo}`, width="128", height="128")
         td
           button.btn.btn--yellow.btn--small.btn--edit-user Edit
           button.btn.btn--red.btn--small.btn--delete-user Delete

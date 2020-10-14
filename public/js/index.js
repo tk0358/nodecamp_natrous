@@ -364,6 +364,7 @@ if (editUserBtns)
             <td><select id='role'><option value='user'>user</option><option value='guide'>guide</option><option value='lead-guide'>lead-guide</option><option value='admin'>admin</option></select></td>
             <td><select><option value='true' selected>true</option><option value='false'>false</option></select></td>
             <td><select id='mailConfirm'><option value='true'>true</option><option value='false'>false</option></select></td>
+            <td><input class='form__upload' type='file' accept='image/*' id='photo' name='photo'><label for='photo'>Change Photo</label></td>
             <td>
               <button class='btn btn--blue btn--small btn--update-user'>Update</button>
               <button class='btn btn--green btn--small btn--cancel-user'>Cancel</button>
@@ -394,13 +395,14 @@ if (editUserBtns)
 const updateUserFunc = e => {
   e.preventDefault();
   const userId = e.target.parentNode.parentNode.id;
-  const form = new URLSearchParams();
+  const form = new FormData();
   const elements = e.target.parentNode.parentNode.children;
   form.append('name', elements[0].firstChild.value);
   form.append('email', elements[1].firstChild.value);
   form.append('role', elements[2].firstChild.value);
   form.append('active', elements[3].firstChild.value);
   form.append('mailConfirm', elements[4].firstChild.value);
+  form.append('photo', elements[5].firstChild.files[0]);
   // console.log(...form.entries());
   updateUser(form, userId);
 };
@@ -430,7 +432,7 @@ if (deleteUserBtns)
 if (createUserForm)
   createUserForm.addEventListener('submit', e => {
     e.preventDefault();
-    const form = new URLSearchParams();
+    const form = new FormData();
     form.append('name', document.getElementById('name').value);
     form.append('email', document.getElementById('email').value);
     form.append('password', document.getElementById('password').value);
@@ -440,5 +442,6 @@ if (createUserForm)
     );
     form.append('role', document.getElementById('role').value);
     form.append('mailConfirm', document.getElementById('mailConfirm').value);
+    form.append('photo', document.getElementById('photo').files[0]);
     createUser(form);
   });

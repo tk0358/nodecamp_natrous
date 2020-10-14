@@ -96,17 +96,22 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createUser = catchAsync(async (req, res) => {
-  const newUser = new User({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm,
-    // passwordChangedAt: req.body.passwordChangedAt,
-    role: req.body.role,
-    mailConfirm: req.body.mailConfirm,
-  });
+const getFileteredBodyAtManageUser = req => {
+  const fileteredBody = filterObj(
+    req.body,
+    'name',
+    'email',
+    'password',
+    'passwordConfirm',
+    'role',
+    'mailConfirm'
+  );
+  if (req.file) fileteredBody.photo = req.file.filename;
+  return fileteredBody;
+};
 
+exports.createUser = catchAsync(async (req, res) => {
+  const newUser = new User(getFileteredBodyAtManageUser(req));
   const user = await newUser.save();
 
   res.status(201).json({
@@ -121,5 +126,26 @@ exports.getAllUsers = factory.getAll(User);
 exports.getUser = factory.getOne(User);
 
 // Do NOT update password with this!
-exports.updateUser = factory.updateOne(User);
+exports.updateUser = catchAsync(async (req, res, next) => {
+  // 1) Filtered out unwanted fields names that are not allowed to be updated
+  const fileteredBody = getFileteredBodyAtManageUser(req);
+
+  // 2)Update user document
+  const updatedUser = await User.findByIdAndUpdate(
+    req.params.id,
+    fileteredBody,
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user: updatedUser,
+    },
+  });
+});
+
 exports.deleteUser = factory.deleteOne(User);
