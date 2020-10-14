@@ -92,6 +92,12 @@ exports.getNewTour = (req, res) => {
   });
 };
 
+exports.getNewUser = (req, res) => {
+  res.status(200).render('newUser', {
+    title: 'New User',
+  });
+};
+
 exports.getLoginForm = (req, res, next) => {
   res.status(200).render('login', {
     title: 'Log into your account',

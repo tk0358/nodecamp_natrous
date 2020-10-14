@@ -1,0 +1,27 @@
+extends base
+
+block content
+  main.main
+    .edit-tour-form
+      h2.heading-secondary.ma-bt-lg Create New User
+      form.form#form--create-user
+        .form__group
+          label.form__label(for='name') name
+          input#name.form__input(type='text', required)
+        .form__group
+          label.form__label(for='email') email
+          input#email.form__input(type='email', required)
+        .form__group
+          label.form__label(for='password') password
+          input#password.form__input(type='password', required)
+        .form__group
+          label.form__label(for='passwordConfirm') passwordConfirm
+          input#passwordConfirm.form__input(type='password', required)
+        .form__group
+          label.form__label(for='role') role
+          input#role.form__input(type='text')
+        .form__group
+          label.form__label(for='mailConfirm') mailConfirm
+          input#mailConfirm.form__input(type='text')
+        .form__group
+          button.btn.btn--green#btn--create-tour Create New User

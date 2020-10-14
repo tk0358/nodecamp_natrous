@@ -7,7 +7,7 @@ import { bookTour } from './stripe';
 import { createReview, updateReview } from './review';
 import { createLike, deleteLike } from './like';
 import { updateTour, createTour, deleteTour } from './tour';
-import { updateUser, deleteUser } from './user';
+import { updateUser, deleteUser, createUser } from './user';
 
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
@@ -32,6 +32,7 @@ const selectBoxDifficultyEdit = document.querySelector(
 );
 const editUserBtns = document.querySelectorAll('.btn--edit-user');
 const deleteUserBtns = document.querySelectorAll('.btn--delete-user');
+const createUserForm = document.getElementById('form--create-user');
 
 // DELEGATION
 if (mapBox) {
@@ -424,4 +425,20 @@ if (deleteUserBtns)
         location.reload(false);
       }
     });
+  });
+
+if (createUserForm)
+  createUserForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const form = new URLSearchParams();
+    form.append('name', document.getElementById('name').value);
+    form.append('email', document.getElementById('email').value);
+    form.append('password', document.getElementById('password').value);
+    form.append(
+      'passwordConfirm',
+      document.getElementById('passwordConfirm').value
+    );
+    form.append('role', document.getElementById('role').value);
+    form.append('mailConfirm', document.getElementById('mailConfirm').value);
+    createUser(form);
   });

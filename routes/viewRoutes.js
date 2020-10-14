@@ -28,13 +28,6 @@ router.get(
 );
 
 router.get(
-  '/manage/users',
-  authController.isLoggedIn,
-  authController.restrictTo('admin'),
-  viewsController.getUserManage
-);
-
-router.get(
   '/tour/new',
   authController.isLoggedIn,
   authController.restrictTo('admin'),
@@ -53,6 +46,20 @@ router.get(
   authController.isLoggedIn,
   authController.restrictTo('admin'),
   viewsController.getEditTour
+);
+
+router.get(
+  '/manage/users',
+  authController.isLoggedIn,
+  authController.restrictTo('admin'),
+  viewsController.getUserManage
+);
+
+router.get(
+  '/user/new',
+  authController.isLoggedIn,
+  authController.restrictTo('admin'),
+  viewsController.getNewUser
 );
 
 router.get('/login', authController.isLoggedIn, viewsController.getLoginForm);

@@ -38,3 +38,21 @@ export const deleteUser = async userId => {
     showAlert('error', err.response.data.message);
   }
 };
+
+export const createUser = async data => {
+  try {
+    const res = await axios({
+      method: 'POST',
+      url: 'http://127.0.0.1:3000/api/v1/users/',
+      data,
+    });
+    if (res.data.status === 'success') {
+      showAlert('success', 'New user is created successfully!');
+      window.setTimeout(() => {
+        location.assign('/manage/users');
+      }, 1500);
+    }
+  } catch (err) {
+    showAlert('error', err.response.data.message);
+  }
+};

@@ -96,12 +96,26 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not defined! Please use /signup instead',
+exports.createUser = catchAsync(async (req, res) => {
+  const newUser = new User({
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+    passwordConfirm: req.body.passwordConfirm,
+    // passwordChangedAt: req.body.passwordChangedAt,
+    role: req.body.role,
+    mailConfirm: req.body.mailConfirm,
   });
-};
+
+  const user = await newUser.save();
+
+  res.status(201).json({
+    status: 'success',
+    data: {
+      data: user,
+    },
+  });
+});
 
 exports.getAllUsers = factory.getAll(User);
 exports.getUser = factory.getOne(User);
