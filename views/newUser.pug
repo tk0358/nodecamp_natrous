@@ -19,10 +19,16 @@ block content
           input#passwordConfirm.form__input(type='password', required)
         .form__group
           label.form__label(for='role') role
-          input#role.form__input(type='text')
+          select#role.form__input
+            option(value='user' selected) user
+            option(value='guide') guide
+            option(value='lead-guide') lead-guide
+            option(value='admin') admin
         .form__group
           label.form__label(for='mailConfirm') mailConfirm
-          input#mailConfirm.form__input(type='text')
+          select#mailConfirm.form__input
+            option(value='true') true
+            option(value='false') false
         .form__group
           input.form__upload(type='file', accept='image/*', id='photo', name='photo')
           label.form__label(for='photo') Choose photo
