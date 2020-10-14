@@ -4,23 +4,25 @@ block content
   h1.margin-top-10px User Manage Page
   a.btn.btn--blue.btn--small.btn--new(href='/user/new') Create new user
   table.users-table 
-    tr
-      th name
-      th email
-      th role
-      th active
-      th mailConfirm
-      th photo
-      th actions
-    each user in users
-      tr(id=`${user.id}`)
-        td= user.name
-        td= user.email
-        td= user.role
-        td= user.active
-        td= user.mailConfirm
-        td
-          img(src=`/img/users/${user.photo}`, width="128", height="128")
-        td
-          button.btn.btn--yellow.btn--small.btn--edit-user Edit
-          button.btn.btn--red.btn--small.btn--delete-user Delete
+    thead
+      tr
+        th name
+        th email
+        th role
+        th active
+        th mailConfirm
+        th photo
+        th actions
+    tbody
+      each user in users
+        tr(id=`${user.id}`)
+          td= user.name
+          td= user.email
+          td= user.role
+          td= user.active
+          td= user.mailConfirm
+          td
+            img(src=`/img/users/${user.photo}`, width="128", height="128")
+          td
+            button.btn.btn--yellow.btn--small.btn--edit-user Edit
+            button.btn.btn--red.btn--small.btn--delete-user Delete
