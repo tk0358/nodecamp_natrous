@@ -21,6 +21,8 @@ exports.updateReview = factory.updateOne(Review);
 exports.deleteReview = factory.deleteOne(Review);
 
 exports.restrictToBookingUser = catchAsync(async (req, res, next) => {
+  if (req.user.role === 'admin') return next();
+
   const bookings = await Booking.find({ user: req.body.user });
   const bookingTours = bookings.map(el => el.tour.id);
 

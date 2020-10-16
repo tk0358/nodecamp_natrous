@@ -1576,6 +1576,10 @@ textarea {
   top: -30px;
 }
 
+.btn--new-review {
+  width: 220px;
+}
+
 .margin-top-10px {
   margin-top: 10px;
 }
@@ -1585,19 +1589,31 @@ textarea {
   height: auto;
 }
 
-.users-table {
+.table {
   width: 1100px;
   font-size: large;
 }
 
-.users-table th {
+.reviews-table {
+  width: 1800px;
+}
+
+.table th {
   text-align: left;
 }
 
-.users-table thead th {
+.table thead th {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
   z-index: 1;
   background-color: white;
+}
+
+.pad-left-5 {
+  padding-left: 5px;
+}
+
+.review-col {
+  width: 500px;
 }

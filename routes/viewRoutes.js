@@ -62,6 +62,20 @@ router.get(
   viewsController.getNewUser
 );
 
+router.get(
+  '/manage/reviews',
+  authController.isLoggedIn,
+  authController.restrictTo('admin'),
+  viewsController.getReviewManage
+);
+
+router.get(
+  '/review/new',
+  authController.isLoggedIn,
+  authController.restrictTo('admin'),
+  viewsController.getNewReview
+);
+
 router.get('/login', authController.isLoggedIn, viewsController.getLoginForm);
 router.get('/signup', authController.isLoggedIn, viewsController.getSignupForm);
 router.get('/me', authController.protect, viewsController.getAccount);

@@ -1,0 +1,31 @@
+extends base
+
+block content
+  main.main
+    .edit-tour-form
+      h2.heading-secondary.ma-bt-lg Create New Review
+      form.form#form--create-review
+        .form__group
+          label.form__label(for='tour') tour
+          select#tour.form__input
+            each tour in tours
+              option(value=`${tour.id}`)= tour.name
+        .form__group
+          label.form__label(for='user') user
+          select#user.form__input
+            each user in users
+              option(value=`${user.id}`)= `${user.name} (${user.email})`
+        .form__group
+          label.form__label(for='rating') rating
+          select#rating.form__input
+            option(value='1') 1
+            option(value='2') 2
+            option(value='3' selected) 3
+            option(value='4') 4
+            option(value='5') 5
+        .form__group
+          label.form__label(for='review') review
+          textarea#review.form__input
+        .form__group
+          button.btn.btn--green Create New Review
+          

@@ -4,7 +4,12 @@ import { displayMap } from './mapbox';
 import { login, logout, signup } from './login';
 import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
-import { createReview, updateReview } from './review';
+import {
+  createReview,
+  updateReview,
+  sortReview,
+  createReviewFromAdmin,
+} from './review';
 import { createLike, deleteLike } from './like';
 import { updateTour, createTour, deleteTour } from './tour';
 import { updateUser, deleteUser, createUser } from './user';
@@ -33,6 +38,14 @@ const selectBoxDifficultyEdit = document.querySelector(
 const editUserBtns = document.querySelectorAll('.btn--edit-user');
 const deleteUserBtns = document.querySelectorAll('.btn--delete-user');
 const createUserForm = document.getElementById('form--create-user');
+
+// Review Manageページのsortボタン
+const tourSortBtn = document.getElementById('tour-sort');
+const userSortBtn = document.getElementById('user-sort');
+const createdSortBtn = document.getElementById('created-sort');
+
+const editReviewBtns = document.querySelectorAll('.btn--edit-review');
+const createReviewForm = document.getElementById('form--create-review');
 
 // DELEGATION
 if (mapBox) {
@@ -444,4 +457,55 @@ if (createUserForm)
     form.append('mailConfirm', document.getElementById('mailConfirm').value);
     form.append('photo', document.getElementById('photo').files[0]);
     createUser(form);
+  });
+
+// Review Manage Pageのソート機能
+if (tourSortBtn) {
+  let count = 0;
+  tourSortBtn.addEventListener('click', e => {
+    e.preventDefault();
+    if (count % 2 === 0) {
+      sortReview('tour');
+    } else {
+      sortReview('-tour');
+    }
+    count++;
+  });
+}
+if (userSortBtn) {
+  let count = 0;
+  userSortBtn.addEventListener('click', e => {
+    e.preventDefault();
+    if (count % 2 === 0) {
+      sortReview('user');
+    } else {
+      sortReview('-user');
+    }
+    count++;
+  });
+}
+if (createdSortBtn) {
+  let count = 0;
+  createdSortBtn.addEventListener('click', e => {
+    e.preventDefault();
+    if (count % 2 === 0) {
+      sortReview('createdAt');
+    } else {
+      sortReview('-createdAt');
+    }
+    count++;
+  });
+}
+
+if (createReviewForm)
+  createReviewForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const form = new URLSearchParams();
+    form.append('tour', document.getElementById('tour').value);
+    form.append('user', document.getElementById('user').value);
+    form.append('rating', document.getElementById('rating').value);
+    form.append('review', document.getElementById('review').value);
+
+    console.log(...form.entries());
+    createReviewFromAdmin(form);
   });

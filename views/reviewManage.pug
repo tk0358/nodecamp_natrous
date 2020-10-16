@@ -1,0 +1,28 @@
+extends base
+
+block content
+  h1.margin-top-10px Review Manage Page
+  a.btn.btn--blue.btn--small.btn--new.btn--new-review(href='/review/new') Create new review
+  table.table.reviews-table 
+    thead
+      tr
+        th tour
+          i.fas.fa-sort.pad-left-5#tour-sort
+        th user
+          i.fas.fa-sort.pad-left-5#user-sort
+        th rating
+        th.review-col review
+        th createdAt
+          i.fas.fa-sort.pad-left-5#created-sort
+        th actions
+    tbody
+      each review in reviews
+        tr(id=`${review.id}`)
+          td= review.tour.name
+          td= review.user.name
+          td= review.rating
+          td.review-col= review.review
+          td= review.createdAt
+          td
+            button.btn.btn--yellow.btn--small.btn--edit-review Edit
+            button.btn.btn--red.btn--small.btn--delete-review Delete

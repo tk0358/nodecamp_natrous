@@ -6,11 +6,12 @@ const router = express.Router({ mergeParams: true });
 
 router.use(authController.protect);
 
+// admin can create review from admin manage page
 router
   .route('/')
   .get(reviewController.getAllReviews)
   .post(
-    authController.restrictTo('user'),
+    authController.restrictTo('user', 'admin'),
     reviewController.setTourUserIds,
     reviewController.restrictToBookingUser,
     reviewController.createReview

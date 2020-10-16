@@ -37,31 +37,55 @@ export const updateReview = async (reviewId, rating, review) => {
       showAlert('success', 'Thank you for updating a review!');
       location.assign('/my-reviews');
     }
-  } catch (err) {}
+  } catch (err) {
+    showAlert('error', err.response.data.message);
+  }
 };
 
-// export const showEditForm = e => {
-//   const reviewId = e.target.dataset.reviewId;
-//   const review =
-//     e.target.parentNode.parentNode.parentNode.childNodes[1].lastChild
-//       .textContent;
-//   e.target.parentNode.parentNode.parentNode.childNodes[1].innerHTML = `<textarea id=review-text name="review-text">${review}</textarea>`;
-//   e.target.parentNode.parentNode.firstChild.innerHTML = `
-//         <div class="review-form__group rating rating-at-my-reviews">
-//           <input id="star5" class="radio-btn hide" name="star" type="radio" value="5">
-//           <label for="star5"> ☆</label>
-//           <input id="star4" class="radio-btn hide" name="star" type="radio" value="4">
-//           <label for="star4"> ☆</label>
-//           <input id="star3" class="radio-btn hide" name="star" type="radio" value="3">
-//           <label for="star3"> ☆</label>
-//           <input id="star2" class="radio-btn hide" name="star" type="radio" value="2">
-//           <label for="star2"> ☆</label>
-//           <input id="star1" class="radio-btn hide" name="star" type="radio" value="1">
-//           <label for="star1"> ☆</label>
-//           <div class="clear">
-//         </div>
-//       `;
-//   e.target.parentNode.innerHTML = `
-//         <a class="btn btn--green btn--small update-review" data-review-id="${reviewId}"> Update</a>
-//       `;
-// };
+export const sortReview = async field => {
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: `http://127.0.0.1:3000/api/v1/reviews?sort=${field}`,
+    });
+    const reviews = res.data.data.data;
+    console.log(reviews);
+    let el = '';
+    reviews.forEach(review => {
+      el += `
+        <tr id=${review.id}>
+          <td>${review.tour.name}</td>
+          <td>${review.user.name}</td>
+          <td>${review.rating}</td>
+          <td class='review-col'>${review.review}</td>
+          <td>${review.createdAt}</td>
+          <td>
+            <button class='btn btn--yellow btn--small btn--edit-review'>Edit</button>
+            <button class='btn btn--red btn--small btn--delete-review'>Delete</button>
+          </td>
+        </tr>
+      `;
+    });
+    document.querySelector('.reviews-table tbody').innerHTML = el;
+  } catch (err) {
+    showAlert('error', err.response.data.message);
+  }
+};
+
+export const createReviewFromAdmin = async data => {
+  try {
+    const res = await axios({
+      method: 'POST',
+      url: 'http://127.0.0.1:3000/api/v1/reviews',
+      data,
+    });
+    if (res.data.status === 'success') {
+      showAlert('success', 'Thank you for writing a review!');
+      window.setTimeout(() => {
+        location.assign('/manage/reviews');
+      }, 1500);
+    }
+  } catch (err) {
+    showAlert('error', err.response.data.message);
+  }
+};

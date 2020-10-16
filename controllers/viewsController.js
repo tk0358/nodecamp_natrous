@@ -213,3 +213,26 @@ exports.getUserManage = catchAsync(async (req, res) => {
     title: 'User Manage Page',
   });
 });
+
+exports.getReviewManage = catchAsync(async (req, res) => {
+  const reviews = await Review.find()
+    .populate('user', 'name')
+    .populate('tour', 'name');
+
+  // console.log(reviews);
+
+  res.status(200).render('reviewManage', {
+    reviews,
+    title: 'Review Manage Page',
+  });
+});
+
+exports.getNewReview = async (req, res) => {
+  const tours = await Tour.find();
+  const users = await User.find();
+  res.status(200).render('newReview', {
+    tours,
+    users,
+    title: 'New Review',
+  });
+};
