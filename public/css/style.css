@@ -1617,3 +1617,9 @@ textarea {
 .review-col {
   width: 500px;
 }
+
+.reviews-table textarea {
+  width: 90%;
+  height: auto;
+  font: inherit;
+}

@@ -18,8 +18,8 @@ block content
     tbody
       each review in reviews
         tr(id=`${review.id}`)
-          td= review.tour.name
-          td= review.user.name
+          td(data-tour-id=`${review.tour.id}`)= review.tour.name
+          td(data-user-id=`${review.user.id}`)= review.user.name
           td= review.rating
           td.review-col= review.review
           td= review.createdAt

@@ -9,6 +9,12 @@ import {
   updateReview,
   sortReview,
   createReviewFromAdmin,
+  getTourSelectBoxAtEditReview,
+  getUserSelectBoxAtEditReview,
+  addEventsToEditReviewBtns,
+  updateReviewFromAdmin,
+  deleteReviewFromAdmin,
+  addEventsToDeleteReviewBtns,
 } from './review';
 import { createLike, deleteLike } from './like';
 import { updateTour, createTour, deleteTour } from './tour';
@@ -44,8 +50,9 @@ const tourSortBtn = document.getElementById('tour-sort');
 const userSortBtn = document.getElementById('user-sort');
 const createdSortBtn = document.getElementById('created-sort');
 
-const editReviewBtns = document.querySelectorAll('.btn--edit-review');
 const createReviewForm = document.getElementById('form--create-review');
+const editReviewBtns = document.querySelectorAll('.btn--edit-review');
+const deleteReviewBtns = document.querySelectorAll('.btn--delete-review');
 
 // DELEGATION
 if (mapBox) {
@@ -380,7 +387,7 @@ if (editUserBtns)
             <td><input class='form__upload' type='file' accept='image/*' id='photo' name='photo'><label for='photo'>Change Photo</label></td>
             <td>
               <button class='btn btn--blue btn--small btn--update-user'>Update</button>
-              <button class='btn btn--green btn--small btn--cancel-user'>Cancel</button>
+              <button class='btn btn--green btn--small btn--cancel'>Cancel</button>
             </td>
           </tr>
           `;
@@ -399,7 +406,10 @@ if (editUserBtns)
           .addEventListener('click', updateUserFunc);
         document
           .querySelector('.btn--cancel-user')
-          .addEventListener('click', cancelUserFunc);
+          .addEventListener('click', e => {
+            e.preventDefault();
+            location.reload(true);
+          });
       }
     });
   });
@@ -418,12 +428,6 @@ const updateUserFunc = e => {
   form.append('photo', elements[5].firstChild.files[0]);
   // console.log(...form.entries());
   updateUser(form, userId);
-};
-
-// Cancelボタンの機能
-const cancelUserFunc = e => {
-  e.preventDefault();
-  location.reload(true);
 };
 
 // Deleteボタン
@@ -509,3 +513,7 @@ if (createReviewForm)
     console.log(...form.entries());
     createReviewFromAdmin(form);
   });
+
+if (editReviewBtns) addEventsToEditReviewBtns(editReviewBtns);
+
+if (deleteReviewBtns) addEventsToDeleteReviewBtns(deleteReviewBtns);
