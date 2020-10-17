@@ -1580,6 +1580,10 @@ textarea {
   width: 220px;
 }
 
+.btn--new-booking {
+  width: 250px;
+}
+
 .margin-top-10px {
   margin-top: 10px;
 }
@@ -1595,6 +1599,10 @@ textarea {
 }
 
 .reviews-table {
+  width: 1800px;
+}
+
+.bookings-table {
   width: 1800px;
 }
 

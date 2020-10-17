@@ -229,7 +229,7 @@ exports.getReviewManage = catchAsync(async (req, res) => {
   });
 });
 
-exports.getNewReview = async (req, res) => {
+exports.getNewReview = catchAsync(async (req, res) => {
   const tours = await Tour.find();
   const users = await User.find();
   res.status(200).render('newReview', {
@@ -237,4 +237,22 @@ exports.getNewReview = async (req, res) => {
     users,
     title: 'New Review',
   });
-};
+});
+
+exports.getBookingManage = catchAsync(async (req, res) => {
+  const bookings = await Booking.find().sort('-createdAt');
+  res.status(200).render('bookingManage', {
+    bookings,
+    title: 'Booking Manage Page',
+  });
+});
+
+exports.getNewBooking = catchAsync(async (req, res) => {
+  const tours = await Tour.find();
+  const users = await User.find();
+  res.status(200).render('newBooking', {
+    tours,
+    users,
+    title: 'New Booking',
+  });
+});

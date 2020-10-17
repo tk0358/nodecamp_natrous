@@ -60,3 +60,16 @@ export const deleteTour = async tourId => {
     showAlert('error', err.response.data.message);
   }
 };
+
+export const getTourInfo = async tourId => {
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: `http://127.0.0.1:3000/api/v1/tours/${tourId}`,
+    });
+    const tour = res.data.data.data;
+    return tour;
+  } catch (err) {
+    showAlert('error', err.response.data.message);
+  }
+};

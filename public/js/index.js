@@ -13,8 +13,15 @@ import {
   addEventsToDeleteReviewBtns,
 } from './review';
 import { createLike, deleteLike } from './like';
-import { updateTour, createTour, deleteTour } from './tour';
+import { updateTour, createTour, deleteTour, getTourInfo } from './tour';
 import { updateUser, deleteUser, createUser } from './user';
+import {
+  sortBooking,
+  addEventsToEditBookingBtns,
+  addEventsToDeleteBookingBtns,
+  createBooking,
+} from './booking';
+import { getStartDateSelectBoxAtBookingForm } from './selectBox';
 
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
@@ -42,13 +49,24 @@ const deleteUserBtns = document.querySelectorAll('.btn--delete-user');
 const createUserForm = document.getElementById('form--create-user');
 
 // Review Manageページのsortボタン
-const tourSortBtn = document.getElementById('tour-sort');
-const userSortBtn = document.getElementById('user-sort');
-const createdSortBtn = document.getElementById('created-sort');
+const reviewTourSortBtn = document.getElementById('review-tour-sort');
+const reviewUserSortBtn = document.getElementById('review-user-sort');
+const reviewCreatedSortBtn = document.getElementById('review-created-sort');
 
 const createReviewForm = document.getElementById('form--create-review');
 const editReviewBtns = document.querySelectorAll('.btn--edit-review');
 const deleteReviewBtns = document.querySelectorAll('.btn--delete-review');
+
+// Booking Manageページのsortボタン
+const bookingTourSortBtn = document.getElementById('booking-tour-sort');
+const bookingUserSortBtn = document.getElementById('booking-user-sort');
+const bookingDateSortBtn = document.getElementById('booking-date-sort');
+const bookingCreatedSortBtn = document.getElementById('booking-created-sort');
+
+const editBookingBtns = document.querySelectorAll('.btn--edit-booking');
+const deleteBookingBtns = document.querySelectorAll('.btn--delete-booking');
+
+const createBookingForm = document.getElementById('form--create-booking');
 
 // DELEGATION
 if (mapBox) {
@@ -459,43 +477,25 @@ if (createUserForm)
     createUser(form);
   });
 
+// sortボタンの機能
+const sortBtnFunc = (btn, field, sortFunc) => {
+  let count = 0;
+  btn.addEventListener('click', e => {
+    e.preventDefault();
+    if (count % 2 === 0) {
+      sortFunc(field);
+    } else {
+      sortFunc(`-${field}`);
+    }
+    count++;
+  });
+};
+
 // Review Manage Pageのソート機能
-if (tourSortBtn) {
-  let count = 0;
-  tourSortBtn.addEventListener('click', e => {
-    e.preventDefault();
-    if (count % 2 === 0) {
-      sortReview('tour');
-    } else {
-      sortReview('-tour');
-    }
-    count++;
-  });
-}
-if (userSortBtn) {
-  let count = 0;
-  userSortBtn.addEventListener('click', e => {
-    e.preventDefault();
-    if (count % 2 === 0) {
-      sortReview('user');
-    } else {
-      sortReview('-user');
-    }
-    count++;
-  });
-}
-if (createdSortBtn) {
-  let count = 0;
-  createdSortBtn.addEventListener('click', e => {
-    e.preventDefault();
-    if (count % 2 === 0) {
-      sortReview('createdAt');
-    } else {
-      sortReview('-createdAt');
-    }
-    count++;
-  });
-}
+if (reviewTourSortBtn) sortBtnFunc(reviewTourSortBtn, 'tour', sortReview);
+if (reviewUserSortBtn) sortBtnFunc(reviewUserSortBtn, 'user', sortReview);
+if (reviewCreatedSortBtn)
+  sortBtnFunc(reviewCreatedSortBtn, 'createdAt', sortReview);
 
 if (createReviewForm)
   createReviewForm.addEventListener('submit', e => {
@@ -511,5 +511,66 @@ if (createReviewForm)
   });
 
 if (editReviewBtns) addEventsToEditReviewBtns(editReviewBtns);
-
 if (deleteReviewBtns) addEventsToDeleteReviewBtns(deleteReviewBtns);
+
+if (bookingTourSortBtn) sortBtnFunc(bookingTourSortBtn, 'tour', sortBooking);
+if (bookingUserSortBtn) sortBtnFunc(bookingUserSortBtn, 'user', sortBooking);
+if (bookingDateSortBtn)
+  sortBtnFunc(bookingDateSortBtn, 'startDate', sortBooking);
+if (bookingCreatedSortBtn)
+  sortBtnFunc(bookingCreatedSortBtn, 'createdAt', sortBooking);
+
+if (editBookingBtns) addEventsToEditBookingBtns(editBookingBtns);
+if (deleteBookingBtns) addEventsToDeleteBookingBtns(deleteBookingBtns);
+
+if (createBookingForm) {
+  const tourElement = document.getElementById('tour');
+  const addedArea = document.querySelector('.added-area');
+
+  // TourのselectBoxで選択されると、startDate, price, paid, buttonが登場
+  tourElement.addEventListener('change', async e => {
+    e.preventDefault();
+    addedArea.innerHTML = '';
+    const tourId = tourElement.value;
+    let el = '';
+    const tour = await getTourInfo(tourId);
+    // console.log(tour);
+    el += await getStartDateSelectBoxAtBookingForm(tour.startDates);
+    el += `
+      <div class='form__group'>
+        <label class='form__label' for='price'>price</label>
+        <input id='price' class='form__input' value='${tour.price}' type='text'>
+      </div>
+    `;
+    el += `
+      <div class='form__group'>
+        <label class='form__label' for='paid'>paid</label>
+        <select id='paid' class='form__input'>
+          <option value='true' selected>true</option>
+          <option value='false'>false</option>
+        </select>
+      </div>
+    `;
+    el += `
+      <div class='form__group'>
+        <button class='btn btn--green'>Create New Booking</button>
+      </div>
+    `;
+
+    addedArea.innerHTML = el;
+  });
+
+  // formのbuttonが押され'submit'イベントが発生したとき
+  createBookingForm.addEventListener('submit', e => {
+    e.preventDefault();
+    // console.log('create button is clicked');
+    const form = new URLSearchParams();
+    form.append('user', document.getElementById('user').value);
+    form.append('tour', document.getElementById('tour').value);
+    form.append('startDate', document.getElementById('startDate').value);
+    form.append('price', document.getElementById('price').value);
+    form.append('paid', document.getElementById('paid').value);
+    // console.log(...form.entries());
+    createBooking(form);
+  });
+}

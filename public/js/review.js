@@ -1,6 +1,7 @@
 /* eslint-disable */
 import axios from 'axios';
 import { showAlert } from './alerts';
+import { getTourSelectBox, getUserSelectBox } from './selectBox';
 
 export const createReview = async (rating, review, user, tour) => {
   try {
@@ -97,7 +98,7 @@ export const createReviewFromAdmin = async data => {
       data,
     });
     if (res.data.status === 'success') {
-      showAlert('success', 'Thank you for writing a review!');
+      showAlert('success', 'Review is successfully created');
       window.setTimeout(() => {
         location.assign('/manage/reviews');
       }, 1500);
@@ -121,8 +122,8 @@ export const addEventsToEditReviewBtns = editReviewBtns => {
       // console.log(reviewId, tourId, userId, rating, review);
 
       let el = '';
-      el += await getTourSelectBoxAtEditReview(tourId);
-      el += await getUserSelectBoxAtEditReview(userId);
+      el += await getTourSelectBox(tourId);
+      el += await getUserSelectBox(userId);
       // rating
       el += `
           <td>
@@ -164,7 +165,9 @@ export const addEventsToEditReviewBtns = editReviewBtns => {
           .addEventListener('click', updateReviewFunc);
         document.querySelector('.btn--cancel').addEventListener('click', e => {
           e.preventDefault();
-          location.reload(false);
+          sortReview(
+            document.querySelector('.reviews-table').dataset.sortField
+          );
         });
       }
     });
@@ -180,60 +183,8 @@ const updateReviewFunc = e => {
   form.append('user', document.getElementById('user').value);
   form.append('rating', document.getElementById('rating').value);
   form.append('review', document.getElementById('review').value);
-  console.log(...form.entries());
+  // console.log(...form.entries());
   updateReviewFromAdmin(reviewId, form);
-};
-
-const getTourSelectBoxAtEditReview = async tourId => {
-  try {
-    const res = await axios({
-      method: 'GET',
-      url: 'http://127.0.0.1:3000/api/v1/tours',
-    });
-    const tours = res.data.data.data;
-    let el = '';
-    el += `<td><select id='tour'>`;
-    // console.log(tourId);
-    // console.log(tours);
-    tours.forEach(tour => {
-      // console.log(tour.id);
-      if (tourId === tour.id) {
-        el += `<option value='${tour.id}' selected>${tour.name}</option>`;
-      } else {
-        el += `<option value='${tour.id}'>${tour.name}</option>`;
-      }
-    });
-    el += `</select></td>`;
-    // console.log(el);
-    return el;
-  } catch (err) {
-    showAlert('error', err.response.data.message);
-  }
-};
-
-const getUserSelectBoxAtEditReview = async userId => {
-  try {
-    const res = await axios({
-      method: 'GET',
-      url: 'http://127.0.0.1:3000/api/v1/users',
-    });
-    const users = res.data.data.data;
-    // console.log(users);
-    let el = '';
-    el += `<td><select id='user'>`;
-    users.forEach(user => {
-      if (userId === user._id) {
-        el += `<option value='${user._id}' selected>${user.name}</option>`;
-      } else {
-        el += `<option value='${user._id}'>${user.name}</option>`;
-      }
-    });
-    el += `</select></td>`;
-    // console.log(el);
-    return el;
-  } catch (err) {
-    showAlert('error', err.response.data.message);
-  }
 };
 
 const updateReviewFromAdmin = async (reviewId, data) => {
@@ -264,7 +215,7 @@ const deleteReviewFromAdmin = async reviewId => {
     if (res.status === 204) {
       showAlert('success', 'This review is deleted successfully!');
       window.setTimeout(() => {
-        location.reload(true);
+        sortReview(document.querySelector('.reviews-table').dataset.sortField);
       }, 1500);
     }
   } catch (err) {
@@ -281,7 +232,7 @@ export const addEventsToDeleteReviewBtns = deleteReviewBtns => {
         const reviewId = e.target.parentNode.parentNode.id;
         deleteReviewFromAdmin(reviewId);
       } else {
-        location.reload(false);
+        sortReview(document.querySelector('.reviews-table').dataset.sortField);
       }
     });
   });

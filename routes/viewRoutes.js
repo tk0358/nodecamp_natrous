@@ -76,6 +76,20 @@ router.get(
   viewsController.getNewReview
 );
 
+router.get(
+  '/manage/bookings',
+  authController.isLoggedIn,
+  authController.restrictTo('admin'),
+  viewsController.getBookingManage
+);
+
+router.get(
+  '/booking/new',
+  authController.isLoggedIn,
+  authController.restrictTo('admin'),
+  viewsController.getNewBooking
+);
+
 router.get('/login', authController.isLoggedIn, viewsController.getLoginForm);
 router.get('/signup', authController.isLoggedIn, viewsController.getSignupForm);
 router.get('/me', authController.protect, viewsController.getAccount);

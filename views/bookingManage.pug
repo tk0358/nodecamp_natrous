@@ -1,0 +1,31 @@
+extends base
+
+block content
+  h1.margin-top-10px Booking Manage Page
+  a.btn.btn--blue.btn--small.btn--new.btn--new-booking(href='/booking/new') Create new booking
+  table.table.bookings-table 
+    thead
+      tr
+        th tour
+          i.fas.fa-sort.pad-left-5#booking-tour-sort
+        th user
+          i.fas.fa-sort.pad-left-5#booking-user-sort
+        th startDate
+          i.fas.fa-sort.pad-left-5#booking-date-sort
+        th price
+        th paid
+        th createdAt
+          i.fas.fa-sort.pad-left-5#booking-created-sort
+        th actions
+    tbody
+      each booking in bookings
+        tr(id=`${booking.id}`)
+          td(data-tour-id=`${booking.tour.id}`)= booking.tour.name
+          td(data-user-id=`${booking.user.id}`)= booking.user.name
+          td= booking.startDate
+          td= booking.price
+          td= booking.paid
+          td= booking.createdAt
+          td
+            button.btn.btn--yellow.btn--small.btn--edit-booking Edit
+            button.btn.btn--red.btn--small.btn--delete-booking Delete
