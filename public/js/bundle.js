@@ -8744,7 +8744,7 @@ exports.bookTour = bookTour;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.addEventsToDeleteReviewBtns = exports.deleteReviewFromAdmin = exports.updateReviewFromAdmin = exports.addEventsToEditReviewBtns = exports.createReviewFromAdmin = exports.sortReview = exports.updateReview = exports.createReview = void 0;
+exports.addEventsToDeleteReviewBtns = exports.addEventsToEditReviewBtns = exports.createReviewFromAdmin = exports.sortReview = exports.updateReview = exports.createReview = void 0;
 
 var _axios = _interopRequireDefault(require("axios"));
 
@@ -8876,14 +8876,35 @@ var sortReview = /*#__PURE__*/function () {
         switch (_context3.prev = _context3.next) {
           case 0:
             _context3.prev = 0;
-            _context3.next = 3;
+            console.log(field);
+
+            if (!field) {
+              _context3.next = 8;
+              break;
+            }
+
+            _context3.next = 5;
             return (0, _axios.default)({
               method: 'GET',
               url: "http://127.0.0.1:3000/api/v1/reviews?sort=".concat(field)
             });
 
-          case 3:
+          case 5:
             res = _context3.sent;
+            _context3.next = 11;
+            break;
+
+          case 8:
+            _context3.next = 10;
+            return (0, _axios.default)({
+              method: 'GET',
+              url: 'http://127.0.0.1:3000/api/v1/reviews'
+            });
+
+          case 10:
+            res = _context3.sent;
+
+          case 11:
             reviews = res.data.data.data; // console.log(reviews);
 
             el = '';
@@ -8891,22 +8912,23 @@ var sortReview = /*#__PURE__*/function () {
               el += "\n        <tr id=".concat(review.id, ">\n          <td data-tour-id=").concat(review.tour.id, ">").concat(review.tour.name, "</td>\n          <td data-user-id=").concat(review.user._id, ">").concat(review.user.name, "</td>\n          <td>").concat(review.rating, "</td>\n          <td class='review-col'>").concat(review.review, "</td>\n          <td>").concat(review.createdAt, "</td>\n          <td>\n            <button class='btn btn--yellow btn--small btn--edit-review'>Edit</button>\n            <button class='btn btn--red btn--small btn--delete-review'>Delete</button>\n          </td>\n        </tr>\n      ");
             });
             document.querySelector('.reviews-table tbody').innerHTML = el;
+            document.querySelector('.reviews-table').dataset.sortField = field;
             addEventsToEditReviewBtns(document.querySelectorAll('.btn--edit-review'));
             addEventsToDeleteReviewBtns(document.querySelectorAll('.btn--delete-review'));
-            _context3.next = 15;
+            _context3.next = 23;
             break;
 
-          case 12:
-            _context3.prev = 12;
+          case 20:
+            _context3.prev = 20;
             _context3.t0 = _context3["catch"](0);
             (0, _alerts.showAlert)('error', _context3.t0.response.data.message);
 
-          case 15:
+          case 23:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, null, [[0, 12]]);
+    }, _callee3, null, [[0, 20]]);
   }));
 
   return function sortReview(_x8) {
@@ -8979,20 +9001,20 @@ var addEventsToEditReviewBtns = function addEventsToEditReviewBtns(editReviewBtn
                 userId = e.target.parentNode.parentNode.children[1].dataset.userId;
                 rating = e.target.parentNode.parentNode.children[2].textContent;
                 review = e.target.parentNode.parentNode.children[3].textContent;
-                createdAt = e.target.parentNode.parentNode.children[4].textContent;
-                console.log(reviewId, tourId, userId, rating, review);
+                createdAt = e.target.parentNode.parentNode.children[4].textContent; // console.log(reviewId, tourId, userId, rating, review);
+
                 el = '';
                 _context5.t0 = el;
-                _context5.next = 12;
+                _context5.next = 11;
                 return getTourSelectBoxAtEditReview(tourId);
 
-              case 12:
+              case 11:
                 el = _context5.t0 += _context5.sent;
                 _context5.t1 = el;
-                _context5.next = 16;
+                _context5.next = 15;
                 return getUserSelectBoxAtEditReview(userId);
 
-              case 16:
+              case 15:
                 el = _context5.t1 += _context5.sent;
                 // rating
                 el += "\n          <td>\n            <select id='rating'>\n              <option value='1'>1</option>\n              <option value='2'>2</option>\n              <option value='3'>3</option>\n              <option value='4'>4</option>\n              <option value='5'>5</option>\n            </select>\n          </td>\n        "; // review
@@ -9014,7 +9036,7 @@ var addEventsToEditReviewBtns = function addEventsToEditReviewBtns(editReviewBtn
                   });
                 }
 
-              case 23:
+              case 22:
               case "end":
                 return _context5.stop();
             }
@@ -9066,12 +9088,11 @@ var getTourSelectBoxAtEditReview = /*#__PURE__*/function () {
             res = _context6.sent;
             tours = res.data.data.data;
             el = '';
-            el += "<td><select id='tour'>";
-            console.log(tourId);
-            console.log(tours);
-            tours.forEach(function (tour) {
-              console.log(tour.id);
+            el += "<td><select id='tour'>"; // console.log(tourId);
+            // console.log(tours);
 
+            tours.forEach(function (tour) {
+              // console.log(tour.id);
               if (tourId === tour.id) {
                 el += "<option value='".concat(tour.id, "' selected>").concat(tour.name, "</option>");
               } else {
@@ -9082,17 +9103,17 @@ var getTourSelectBoxAtEditReview = /*#__PURE__*/function () {
 
             return _context6.abrupt("return", el);
 
-          case 14:
-            _context6.prev = 14;
+          case 12:
+            _context6.prev = 12;
             _context6.t0 = _context6["catch"](0);
             (0, _alerts.showAlert)('error', _context6.t0.response.data.message);
 
-          case 17:
+          case 15:
           case "end":
             return _context6.stop();
         }
       }
-    }, _callee6, null, [[0, 14]]);
+    }, _callee6, null, [[0, 12]]);
   }));
 
   return function getTourSelectBoxAtEditReview(_x11) {
@@ -9116,8 +9137,8 @@ var getUserSelectBoxAtEditReview = /*#__PURE__*/function () {
 
           case 3:
             res = _context7.sent;
-            users = res.data.data.data;
-            console.log(users);
+            users = res.data.data.data; // console.log(users);
+
             el = '';
             el += "<td><select id='user'>";
             users.forEach(function (user) {
@@ -9131,17 +9152,17 @@ var getUserSelectBoxAtEditReview = /*#__PURE__*/function () {
 
             return _context7.abrupt("return", el);
 
-          case 13:
-            _context7.prev = 13;
+          case 12:
+            _context7.prev = 12;
             _context7.t0 = _context7["catch"](0);
             (0, _alerts.showAlert)('error', _context7.t0.response.data.message);
 
-          case 16:
+          case 15:
           case "end":
             return _context7.stop();
         }
       }
-    }, _callee7, null, [[0, 13]]);
+    }, _callee7, null, [[0, 12]]);
   }));
 
   return function getUserSelectBoxAtEditReview(_x12) {
@@ -9170,7 +9191,7 @@ var updateReviewFromAdmin = /*#__PURE__*/function () {
             if (res.data.status === 'success') {
               (0, _alerts.showAlert)('success', 'This review is updated successfully');
               window.setTimeout(function () {
-                location.reload(true);
+                sortReview(document.querySelector('.reviews-table').dataset.sortField);
               }, 1500);
             }
 
@@ -9194,8 +9215,6 @@ var updateReviewFromAdmin = /*#__PURE__*/function () {
     return _ref8.apply(this, arguments);
   };
 }();
-
-exports.updateReviewFromAdmin = updateReviewFromAdmin;
 
 var deleteReviewFromAdmin = /*#__PURE__*/function () {
   var _ref9 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee9(reviewId) {
@@ -9242,8 +9261,6 @@ var deleteReviewFromAdmin = /*#__PURE__*/function () {
     return _ref9.apply(this, arguments);
   };
 }();
-
-exports.deleteReviewFromAdmin = deleteReviewFromAdmin;
 
 var addEventsToDeleteReviewBtns = function addEventsToDeleteReviewBtns(deleteReviewBtns) {
   deleteReviewBtns.forEach(function (btn) {
@@ -10410,16 +10427,12 @@ if (createdSortBtn) {
 }
 
 if (createReviewForm) createReviewForm.addEventListener('submit', function (e) {
-  var _console;
-
   e.preventDefault();
   var form = new URLSearchParams();
   form.append('tour', document.getElementById('tour').value);
   form.append('user', document.getElementById('user').value);
   form.append('rating', document.getElementById('rating').value);
-  form.append('review', document.getElementById('review').value);
-
-  (_console = console).log.apply(_console, _toConsumableArray(form.entries()));
+  form.append('review', document.getElementById('review').value); // console.log(...form.entries());
 
   (0, _review.createReviewFromAdmin)(form);
 });

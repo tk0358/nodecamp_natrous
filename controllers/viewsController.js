@@ -216,8 +216,10 @@ exports.getUserManage = catchAsync(async (req, res) => {
 
 exports.getReviewManage = catchAsync(async (req, res) => {
   const reviews = await Review.find()
+    .sort('-createdAt')
     .populate('user', 'name')
     .populate('tour', 'name');
+  // デフォルトでは新しい物をチェックしやすいよう最新の物が一番上に来るような順番に
 
   // console.log(reviews);
 

@@ -9,11 +9,7 @@ import {
   updateReview,
   sortReview,
   createReviewFromAdmin,
-  getTourSelectBoxAtEditReview,
-  getUserSelectBoxAtEditReview,
   addEventsToEditReviewBtns,
-  updateReviewFromAdmin,
-  deleteReviewFromAdmin,
   addEventsToDeleteReviewBtns,
 } from './review';
 import { createLike, deleteLike } from './like';
@@ -510,7 +506,7 @@ if (createReviewForm)
     form.append('rating', document.getElementById('rating').value);
     form.append('review', document.getElementById('review').value);
 
-    console.log(...form.entries());
+    // console.log(...form.entries());
     createReviewFromAdmin(form);
   });
 

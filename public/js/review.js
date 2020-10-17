@@ -44,10 +44,22 @@ export const updateReview = async (reviewId, rating, review) => {
 
 export const sortReview = async field => {
   try {
-    const res = await axios({
-      method: 'GET',
-      url: `http://127.0.0.1:3000/api/v1/reviews?sort=${field}`,
-    });
+    console.log(field);
+    let res;
+    if (field) {
+      // console.log('field is not undefined');
+      res = await axios({
+        method: 'GET',
+        url: `http://127.0.0.1:3000/api/v1/reviews?sort=${field}`,
+      });
+    } else {
+      // console.log('field is undefined');
+      res = await axios({
+        method: 'GET',
+        url: 'http://127.0.0.1:3000/api/v1/reviews',
+      });
+      // 'http://.../api/v1/reviews'は'http://.../api/vi/reviews?sort=-createdAt'と同じ結果が返ってくる(apiFeaturesのsort()参照)
+    }
     const reviews = res.data.data.data;
     // console.log(reviews);
     let el = '';
@@ -67,6 +79,7 @@ export const sortReview = async field => {
       `;
     });
     document.querySelector('.reviews-table tbody').innerHTML = el;
+    document.querySelector('.reviews-table').dataset.sortField = field;
     addEventsToEditReviewBtns(document.querySelectorAll('.btn--edit-review'));
     addEventsToDeleteReviewBtns(
       document.querySelectorAll('.btn--delete-review')
@@ -105,7 +118,7 @@ export const addEventsToEditReviewBtns = editReviewBtns => {
       const review = e.target.parentNode.parentNode.children[3].textContent;
       const createdAt = e.target.parentNode.parentNode.children[4].textContent;
 
-      console.log(reviewId, tourId, userId, rating, review);
+      // console.log(reviewId, tourId, userId, rating, review);
 
       let el = '';
       el += await getTourSelectBoxAtEditReview(tourId);
@@ -180,10 +193,10 @@ const getTourSelectBoxAtEditReview = async tourId => {
     const tours = res.data.data.data;
     let el = '';
     el += `<td><select id='tour'>`;
-    console.log(tourId);
-    console.log(tours);
+    // console.log(tourId);
+    // console.log(tours);
     tours.forEach(tour => {
-      console.log(tour.id);
+      // console.log(tour.id);
       if (tourId === tour.id) {
         el += `<option value='${tour.id}' selected>${tour.name}</option>`;
       } else {
@@ -205,7 +218,7 @@ const getUserSelectBoxAtEditReview = async userId => {
       url: 'http://127.0.0.1:3000/api/v1/users',
     });
     const users = res.data.data.data;
-    console.log(users);
+    // console.log(users);
     let el = '';
     el += `<td><select id='user'>`;
     users.forEach(user => {
@@ -223,7 +236,7 @@ const getUserSelectBoxAtEditReview = async userId => {
   }
 };
 
-export const updateReviewFromAdmin = async (reviewId, data) => {
+const updateReviewFromAdmin = async (reviewId, data) => {
   try {
     const res = await axios({
       method: 'PATCH',
@@ -233,7 +246,7 @@ export const updateReviewFromAdmin = async (reviewId, data) => {
     if (res.data.status === 'success') {
       showAlert('success', 'This review is updated successfully');
       window.setTimeout(() => {
-        location.reload(true);
+        sortReview(document.querySelector('.reviews-table').dataset.sortField);
       }, 1500);
     }
   } catch (err) {
@@ -241,7 +254,7 @@ export const updateReviewFromAdmin = async (reviewId, data) => {
   }
 };
 
-export const deleteReviewFromAdmin = async reviewId => {
+const deleteReviewFromAdmin = async reviewId => {
   try {
     const res = await axios({
       method: 'DELETE',
