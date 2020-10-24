@@ -105,6 +105,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   // 1) create confirm Token
   const token = newUser.createConfirmToken();
   await newUser.save();
+  console.log(newUser);
 
   // 2) send email with token
   try {

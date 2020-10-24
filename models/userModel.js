@@ -2,6 +2,15 @@ const crypto = require('crypto');
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const { promisify } = require('util');
+
+// Create authenticated Authy API client
+// const authy = require('authy')(process.env.AUTHY_API_KEY);
+
+const client = require('twilio')(
+  process.env.TWILIO_ACCOUNT_SID,
+  process.env.TWILIO_AUTH_TOKEN
+);
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -57,6 +66,11 @@ const userSchema = new mongoose.Schema({
     default: true,
     select: false,
   },
+  // authyId: String,
+  // authyStatus: {
+  //   type: String,
+  //   default: 'unverified',
+  // },
 });
 
 // userSchema.virtual('bookings', {
@@ -64,6 +78,23 @@ const userSchema = new mongoose.Schema({
 //   foreignField: 'user',
 //   localField: '_id',
 // });
+
+// const registerUserWrapper = email => {
+//   return new Promise((resolve, reject) => {
+//     authy.register_user(
+//       email,
+//       process.env.PHONE_NUMBER,
+//       process.env.COUNTRY_CODE,
+//       (err, res) => {
+//         if (err) {
+//           reject(err);
+//         } else {
+//           resolve(res);
+//         }
+//       }
+//     );
+//   });
+// };
 
 userSchema.pre('save', async function (next) {
   // Only run this function if password was actually modified
@@ -74,6 +105,14 @@ userSchema.pre('save', async function (next) {
 
   // Delete passwordConfirm field
   this.passwordConfirm = undefined;
+
+  // if (!this.authyId) {
+  //   // Register this user if it's a new user
+  //   const res = await registerUserWrapper(this.email);
+  //   this.authyId = res.user.id;
+  //   return next();
+  // }
+
   next();
 });
 
