@@ -14,6 +14,7 @@ router.use('./:userId/likes', likeRouter);
 
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
+router.post('/smsAuth', authController.confirmSMS);
 router.get('/logout', authController.logout);
 
 router.get('/confirmEmail/:token', authController.confirmEmail);

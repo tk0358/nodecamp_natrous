@@ -1,12 +1,17 @@
 const crypto = require('crypto');
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
+const { config } = require('process');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const Email = require('../utils/email');
 const RefreshToken = require('../models/refreshTokenModel');
-const { config } = require('process');
+
+const client = require('twilio')(
+  process.env.TWILIO_ACCOUNT_SID,
+  process.env.TWILIO_AUTH_TOKEN
+);
 
 const generateJwtToken = id => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -105,7 +110,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   // 1) create confirm Token
   const token = newUser.createConfirmToken();
   await newUser.save();
-  console.log(newUser);
+  // console.log(newUser);
 
   // 2) send email with token
   try {
@@ -193,29 +198,84 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!email || !password) {
     return next(new AppError('Please provide email and password', 400));
   }
-  // 2) Check if user exists && password is correct
+  // 2) Check if user exists && password is correct(1st authentication has succeeded)
   const user = await User.findOne({ email })
     .select('+password')
     .select('+mailConfirm');
   // const correct = await user.correctPassword(password, user.password);
 
   // console.log(user);
-  if (!user.mailConfirm) {
-    return next(new AppError('Please confirm your email', 401));
-  }
-
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError('Incorrect email or password', 401));
   }
 
-  // 3) revoke used refreshToken
-  // console.log(req.cookies);
-  if (req.cookies.refreshToken) {
-    await revokeRefreshToken(req.cookies.refreshToken, ip);
+  // まだメール認証が終わってない場合
+  if (!user.mailConfirm) {
+    return next(new AppError('Please confirm your email', 401));
   }
 
-  // 4) If everyghing ok, create jwt and new refreshToken and send them to client
-  await createSendToken({ user, ip }, 200, res);
+  // 3) Send SMS
+  const service = await client.verify.services.create({
+    friendlyName: 'Natours Log in',
+  });
+  const serviceId = service.sid;
+  await User.findByIdAndUpdate(user._id, { serviceId });
+
+  // 本来は、userに登録された電話番号とカントリーコードから組み立てる
+  const phoneNumber = `${process.env.COUNTRY_CODE}${process.env.PHONE_NUMBER}`;
+  const verification = await client.verify
+    .services(service.sid)
+    .verifications.create({ to: phoneNumber, channel: 'sms' });
+  console.log(verification.status);
+
+  // 4)
+  res.status(200).json({
+    status: 'success',
+    serviceId,
+    message: 'Please confirm your phone that We are sending SMS message to',
+  });
+});
+
+exports.confirmSMS = catchAsync(async (req, res, next) => {
+  const { code, serviceId } = req.body;
+  const { ip } = req;
+  // 1) Get User from ServiceId
+  const user = await User.findOne({ serviceId });
+
+  // 2) Check if SMS code is correct
+  // 本来は、userに登録された電話番号とカントリーコードから組み立てる
+  const phoneNumber = `${process.env.COUNTRY_CODE}${process.env.PHONE_NUMBER}`;
+
+  // console.log(serviceId);
+  // console.log(phoneNumber);
+
+  const verificationCheck = await client.verify
+    .services(serviceId)
+    .verificationChecks.create({ to: phoneNumber, code });
+
+  console.log(verificationCheck.status);
+
+  // when input code is incorrect
+  if (verificationCheck.status === 'pending') {
+    return next(
+      new AppError('Your code is incorrect! Please confirm again', 401)
+    );
+  }
+
+  // when input code is correct
+  if (verificationCheck.status === 'approved') {
+    // 3) ２段階認証が成功したので不要なserviceIdを消去
+    await User.findByIdAndUpdate(user._id, { serviceId: undefined });
+
+    // 4) revoke used refreshToken
+    // console.log(req.cookies);
+    if (req.cookies.refreshToken) {
+      await revokeRefreshToken(req.cookies.refreshToken, ip);
+    }
+
+    // 5) If everyghing ok, create jwt and new refreshToken and send them to client
+    await createSendToken({ user, ip }, 200, res);
+  }
 });
 
 exports.logout = catchAsync(async (req, res) => {

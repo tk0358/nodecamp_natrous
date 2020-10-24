@@ -2,15 +2,10 @@ const crypto = require('crypto');
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
-const { promisify } = require('util');
+// const { promisify } = require('util');
 
 // Create authenticated Authy API client
 // const authy = require('authy')(process.env.AUTHY_API_KEY);
-
-const client = require('twilio')(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-);
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -71,6 +66,7 @@ const userSchema = new mongoose.Schema({
   //   type: String,
   //   default: 'unverified',
   // },
+  serviceId: String,
 });
 
 // userSchema.virtual('bookings', {
@@ -112,6 +108,10 @@ userSchema.pre('save', async function (next) {
   //   this.authyId = res.user.id;
   //   return next();
   // }
+
+  // client.verify.services
+  //   .create({ friendlyName: 'My First Verify Service' })
+  //   .then(service => console.log(service.sid));
 
   next();
 });
