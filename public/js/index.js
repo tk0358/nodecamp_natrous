@@ -1,7 +1,7 @@
 /* eslint-disable */
 import '@babel/polyfill';
 import { displayMap } from './mapbox';
-import { login, logout, signup } from './login';
+import { login, smsAuth, logout, signup } from './login';
 import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
 import {
@@ -26,6 +26,7 @@ import { getStartDateSelectBoxAtBookingForm } from './selectBox';
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
+const smsForm = document.querySelector('.form--sms');
 const signupForm = document.querySelector('.form--signup');
 const logOutBtn = document.querySelector('.nav__el--logout');
 const userDataForm = document.querySelector('.form-user-data');
@@ -82,6 +83,15 @@ if (loginForm)
     const password = document.getElementById('password').value;
     login(email, password);
   });
+
+if (smsForm)
+  smsForm.addEventListener('submit', e => {
+    e.preventDefault();
+
+    const serviceId = smsForm.dataset.serviceId
+    const code = document.getElementById('sms').value;
+    smsAuth(serviceId, code);
+  })
 
 if (signupForm)
   signupForm.addEventListener('submit', e => {

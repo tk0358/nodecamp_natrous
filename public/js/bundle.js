@@ -8418,7 +8418,7 @@ exports.showAlert = showAlert;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.signup = exports.logout = exports.login = void 0;
+exports.signup = exports.logout = exports.smsAuth = exports.login = void 0;
 
 var _axios = _interopRequireDefault(require("axios"));
 
@@ -8432,7 +8432,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 var login = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(email, password) {
-    var res;
+    var res, serviceId;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -8452,9 +8452,11 @@ var login = /*#__PURE__*/function () {
             res = _context.sent;
 
             if (res.data.status === 'success') {
-              (0, _alerts.showAlert)('success', 'Logged in successfully!');
+              console.log(res.data);
+              serviceId = res.data.serviceId;
+              (0, _alerts.showAlert)('success', 'We sent SMS code to your phone! Please confirm it!');
               window.setTimeout(function () {
-                location.assign('/');
+                location.assign("/sms-auth?serviceId=".concat(serviceId));
               }, 1500);
             } // console.log(res);
 
@@ -8483,8 +8485,8 @@ var login = /*#__PURE__*/function () {
 
 exports.login = login;
 
-var logout = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+var smsAuth = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(serviceId, code) {
     var res;
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
@@ -8493,12 +8495,63 @@ var logout = /*#__PURE__*/function () {
             _context2.prev = 0;
             _context2.next = 3;
             return (0, _axios.default)({
+              method: 'POST',
+              url: 'http://127.0.0.1:3000/api/v1/users/smsAuth',
+              data: {
+                serviceId: serviceId,
+                code: code
+              }
+            });
+
+          case 3:
+            res = _context2.sent;
+
+            if (res.data.status === 'success') {
+              (0, _alerts.showAlert)('success', 'Logged in successfully!');
+              window.setTimeout(function () {
+                location.assign('/');
+              }, 1500);
+            }
+
+            _context2.next = 10;
+            break;
+
+          case 7:
+            _context2.prev = 7;
+            _context2.t0 = _context2["catch"](0);
+            (0, _alerts.showAlert)('error', _context2.t0.response.data.message);
+
+          case 10:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2, null, [[0, 7]]);
+  }));
+
+  return function smsAuth(_x3, _x4) {
+    return _ref2.apply(this, arguments);
+  };
+}();
+
+exports.smsAuth = smsAuth;
+
+var logout = /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+    var res;
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.prev = 0;
+            _context3.next = 3;
+            return (0, _axios.default)({
               method: 'GET',
               url: 'http://127.0.0.1:3000/api/v1/users/logout'
             });
 
           case 3:
-            res = _context2.sent;
+            res = _context3.sent;
 
             if (res.data.status === 'success') {
               (0, _alerts.showAlert)('success', 'Logged out successfully!');
@@ -8507,39 +8560,39 @@ var logout = /*#__PURE__*/function () {
               }, 1500);
             }
 
-            _context2.next = 11;
+            _context3.next = 11;
             break;
 
           case 7:
-            _context2.prev = 7;
-            _context2.t0 = _context2["catch"](0);
-            console.log(_context2.t0.response);
+            _context3.prev = 7;
+            _context3.t0 = _context3["catch"](0);
+            console.log(_context3.t0.response);
             (0, _alerts.showAlert)('error', 'Error logging out! Try again.');
 
           case 11:
           case "end":
-            return _context2.stop();
+            return _context3.stop();
         }
       }
-    }, _callee2, null, [[0, 7]]);
+    }, _callee3, null, [[0, 7]]);
   }));
 
   return function logout() {
-    return _ref2.apply(this, arguments);
+    return _ref3.apply(this, arguments);
   };
 }();
 
 exports.logout = logout;
 
 var signup = /*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(name, email, password, passwordConfirm) {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(name, email, password, passwordConfirm) {
     var res;
-    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+    return regeneratorRuntime.wrap(function _callee4$(_context4) {
       while (1) {
-        switch (_context3.prev = _context3.next) {
+        switch (_context4.prev = _context4.next) {
           case 0:
-            _context3.prev = 0;
-            _context3.next = 3;
+            _context4.prev = 0;
+            _context4.next = 3;
             return (0, _axios.default)({
               method: 'POST',
               url: 'http://127.0.0.1:3000/api/v1/users/signup',
@@ -8552,7 +8605,7 @@ var signup = /*#__PURE__*/function () {
             });
 
           case 3:
-            res = _context3.sent;
+            res = _context4.sent;
 
             if (res.data.status === 'success') {
               (0, _alerts.showAlert)('success', 'Please confirm your email!');
@@ -8561,25 +8614,25 @@ var signup = /*#__PURE__*/function () {
               }, 1500);
             }
 
-            _context3.next = 10;
+            _context4.next = 10;
             break;
 
           case 7:
-            _context3.prev = 7;
-            _context3.t0 = _context3["catch"](0);
+            _context4.prev = 7;
+            _context4.t0 = _context4["catch"](0);
             // console.log(err.response.data);
-            (0, _alerts.showAlert)('error', _context3.t0.response.data.message);
+            (0, _alerts.showAlert)('error', _context4.t0.response.data.message);
 
           case 10:
           case "end":
-            return _context3.stop();
+            return _context4.stop();
         }
       }
-    }, _callee3, null, [[0, 7]]);
+    }, _callee4, null, [[0, 7]]);
   }));
 
-  return function signup(_x3, _x4, _x5, _x6) {
-    return _ref3.apply(this, arguments);
+  return function signup(_x5, _x6, _x7, _x8) {
+    return _ref4.apply(this, arguments);
   };
 }();
 
@@ -10477,6 +10530,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 // DOM ELEMENTS
 var mapBox = document.getElementById('map');
 var loginForm = document.querySelector('.form--login');
+var smsForm = document.querySelector('.form--sms');
 var signupForm = document.querySelector('.form--signup');
 var logOutBtn = document.querySelector('.nav__el--logout');
 var userDataForm = document.querySelector('.form-user-data');
@@ -10522,6 +10576,12 @@ if (loginForm) loginForm.addEventListener('submit', function (e) {
   var email = document.getElementById('email').value;
   var password = document.getElementById('password').value;
   (0, _login.login)(email, password);
+});
+if (smsForm) smsForm.addEventListener('submit', function (e) {
+  e.preventDefault();
+  var serviceId = smsForm.dataset.serviceId;
+  var code = document.getElementById('sms').value;
+  (0, _login.smsAuth)(serviceId, code);
 });
 if (signupForm) signupForm.addEventListener('submit', function (e) {
   e.preventDefault();

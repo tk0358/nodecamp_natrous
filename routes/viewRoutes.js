@@ -91,6 +91,7 @@ router.get(
 );
 
 router.get('/login', authController.isLoggedIn, viewsController.getLoginForm);
+router.get('/sms-auth', authController.isLoggedIn, viewsController.getSmsForm);
 router.get('/signup', authController.isLoggedIn, viewsController.getSignupForm);
 router.get('/me', authController.protect, viewsController.getAccount);
 router.get('/my-tours', authController.protect, viewsController.getMyTours);

@@ -226,6 +226,8 @@ exports.login = catchAsync(async (req, res, next) => {
   const verification = await client.verify
     .services(service.sid)
     .verifications.create({ to: phoneNumber, channel: 'sms' });
+  // channel: 'sms', 'call', 'emal'
+
   console.log(verification.status);
 
   // 4)
@@ -253,14 +255,7 @@ exports.confirmSMS = catchAsync(async (req, res, next) => {
     .services(serviceId)
     .verificationChecks.create({ to: phoneNumber, code });
 
-  console.log(verificationCheck.status);
-
-  // when input code is incorrect
-  if (verificationCheck.status === 'pending') {
-    return next(
-      new AppError('Your code is incorrect! Please confirm again', 401)
-    );
-  }
+  // console.log(verificationCheck.status);
 
   // when input code is correct
   if (verificationCheck.status === 'approved') {
@@ -275,6 +270,13 @@ exports.confirmSMS = catchAsync(async (req, res, next) => {
 
     // 5) If everyghing ok, create jwt and new refreshToken and send them to client
     await createSendToken({ user, ip }, 200, res);
+  }
+
+  // when input code is incorrect
+  if (verificationCheck.status === 'pending') {
+    return next(
+      new AppError('Your code is incorrect! Please confirm again', 401)
+    );
   }
 });
 

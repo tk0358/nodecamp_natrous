@@ -104,6 +104,14 @@ exports.getLoginForm = (req, res, next) => {
   });
 };
 
+exports.getSmsForm = (req, res, next) => {
+  const { serviceId } = req.query;
+  res.status(200).render('sms', {
+    title: 'Confirm your SMS code',
+    serviceId,
+  });
+};
+
 exports.getSignupForm = (req, res, next) => {
   res.status(200).render('signup', {
     title: 'Sign up to Natours',

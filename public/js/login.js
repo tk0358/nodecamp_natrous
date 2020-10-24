@@ -14,9 +14,11 @@ export const login = async (email, password) => {
     });
 
     if (res.data.status === 'success') {
-      showAlert('success', 'Logged in successfully!');
+      console.log(res.data);
+      const { serviceId } = res.data
+      showAlert('success', 'We sent SMS code to your phone! Please confirm it!');
       window.setTimeout(() => {
-        location.assign('/');
+        location.assign(`/sms-auth?serviceId=${serviceId}`);
       }, 1500);
     }
     // console.log(res);
@@ -25,6 +27,27 @@ export const login = async (email, password) => {
     showAlert('error', err.response.data.message);
   }
 };
+
+export const smsAuth = async (serviceId, code) => {
+  try {
+    const res = await axios({
+      method: 'POST',
+      url: 'http://127.0.0.1:3000/api/v1/users/smsAuth',
+      data: {
+        serviceId,
+        code
+      }
+    })
+    if (res.data.status === 'success') {
+      showAlert('success', 'Logged in successfully!');
+      window.setTimeout(() => {
+        location.assign('/');
+      }, 1500);
+    }
+  } catch(err) {
+    showAlert('error', err.response.data.message);
+  }
+}
 
 export const logout = async () => {
   try {
