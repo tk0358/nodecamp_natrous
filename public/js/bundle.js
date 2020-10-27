@@ -8432,7 +8432,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 var login = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(email, password) {
-    var res, serviceId;
+    var res;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -8452,12 +8452,20 @@ var login = /*#__PURE__*/function () {
             res = _context.sent;
 
             if (res.data.status === 'success') {
-              console.log(res.data);
-              serviceId = res.data.serviceId;
-              (0, _alerts.showAlert)('success', 'We sent SMS code to your phone! Please confirm it!');
-              window.setTimeout(function () {
-                location.assign("/sms-auth?serviceId=".concat(serviceId));
-              }, 1500);
+              console.log(res.data); // 2段階認証部なのでテストの為コメントアウト
+              // const { serviceId } = res.data
+              // showAlert('success', 'We sent SMS code to your phone! Please confirm it!');
+              // window.setTimeout(() => {
+              //   location.assign(`/sms-auth?serviceId=${serviceId}`);
+              // }, 1500);
+              // テストの為の簡易ログイン用コード
+
+              if (res.data.status === 'success') {
+                (0, _alerts.showAlert)('success', 'Logged in successfully!');
+                window.setTimeout(function () {
+                  location.assign('/');
+                }, 1500);
+              }
             } // console.log(res);
 
 

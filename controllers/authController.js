@@ -237,6 +237,7 @@ exports.login = catchAsync(async (req, res, next) => {
   //   serviceId,
   //   message: 'Please confirm your phone that We are sending SMS message to',
   // });
+  // ここまでが２段階認証部分
 
   // 以降、テストの為、２段階認証をスキップして、簡単にログインさせる
   // ) revoke used refreshToken

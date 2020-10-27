@@ -15,11 +15,20 @@ export const login = async (email, password) => {
 
     if (res.data.status === 'success') {
       console.log(res.data);
-      const { serviceId } = res.data
-      showAlert('success', 'We sent SMS code to your phone! Please confirm it!');
-      window.setTimeout(() => {
-        location.assign(`/sms-auth?serviceId=${serviceId}`);
-      }, 1500);
+      // 2段階認証部なのでテストの為コメントアウト
+      // const { serviceId } = res.data
+      // showAlert('success', 'We sent SMS code to your phone! Please confirm it!');
+      // window.setTimeout(() => {
+      //   location.assign(`/sms-auth?serviceId=${serviceId}`);
+      // }, 1500);
+
+      // テストの為の簡易ログイン用コード
+      if (res.data.status === 'success') {
+        showAlert('success', 'Logged in successfully!');
+        window.setTimeout(() => {
+          location.assign('/');
+        }, 1500);
+      }
     }
     // console.log(res);
   } catch (err) {
