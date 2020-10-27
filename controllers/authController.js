@@ -214,28 +214,39 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Please confirm your email', 401));
   }
 
-  // 3) Send SMS
-  const service = await client.verify.services.create({
-    friendlyName: 'Natours Log in',
-  });
-  const serviceId = service.sid;
-  await User.findByIdAndUpdate(user._id, { serviceId });
+  // ２段階認証（テストのため一旦コメントアウト）
+  // // 3) Send SMS
+  // const service = await client.verify.services.create({
+  //   friendlyName: 'Natours Log in',
+  // });
+  // const serviceId = service.sid;
+  // await User.findByIdAndUpdate(user._id, { serviceId });
 
-  // 本来は、userに登録された電話番号とカントリーコードから組み立てる
-  const phoneNumber = `${process.env.COUNTRY_CODE}${process.env.PHONE_NUMBER}`;
-  const verification = await client.verify
-    .services(service.sid)
-    .verifications.create({ to: phoneNumber, channel: 'sms' });
-  // channel: 'sms', 'call', 'emal'
+  // // 本来は、userに登録された電話番号とカントリーコードから組み立てる
+  // const phoneNumber = `${process.env.COUNTRY_CODE}${process.env.PHONE_NUMBER}`;
+  // const verification = await client.verify
+  //   .services(service.sid)
+  //   .verifications.create({ to: phoneNumber, channel: 'sms' });
+  // // channel: 'sms', 'call', 'emal'
 
-  console.log(verification.status);
+  // console.log(verification.status);
 
-  // 4)
-  res.status(200).json({
-    status: 'success',
-    serviceId,
-    message: 'Please confirm your phone that We are sending SMS message to',
-  });
+  // // 4)
+  // res.status(200).json({
+  //   status: 'success',
+  //   serviceId,
+  //   message: 'Please confirm your phone that We are sending SMS message to',
+  // });
+
+  // 以降、テストの為、２段階認証をスキップして、簡単にログインさせる
+  // ) revoke used refreshToken
+  // console.log(req.cookies);
+  if (req.cookies.refreshToken) {
+    await revokeRefreshToken(req.cookies.refreshToken, ip);
+  }
+
+  // ) If everyghing ok, create jwt and new refreshToken and send them to client
+  await createSendToken({ user, ip }, 200, res);
 });
 
 exports.confirmSMS = catchAsync(async (req, res, next) => {
