@@ -11,6 +11,7 @@ import {
   createReviewFromAdmin,
   addEventsToEditReviewBtns,
   addEventsToDeleteReviewBtns,
+  deleteReviewAtMyReviews
 } from './review';
 import { createLike, deleteLike } from './like';
 import { updateTour, createTour, deleteTour, getTourInfo } from './tour';
@@ -68,6 +69,9 @@ const editBookingBtns = document.querySelectorAll('.btn--edit-booking');
 const deleteBookingBtns = document.querySelectorAll('.btn--delete-booking');
 
 const createBookingForm = document.getElementById('form--create-booking');
+
+// delete buttons at my reviews page
+const deleteReviewBtnsAtMyReviews = document.querySelectorAll('.delete-review');
 
 // DELEGATION
 if (mapBox) {
@@ -584,3 +588,11 @@ if (createBookingForm) {
     createBooking(form);
   });
 }
+
+
+if (deleteReviewBtnsAtMyReviews)
+deleteReviewBtnsAtMyReviews.forEach(btn => btn.addEventListener('click', e => {
+    e.preventDefault();
+    console.log(e.target.parentNode.parentNode.dataset.reviewId)
+    deleteReviewAtMyReviews(e.target.parentNode.parentNode.dataset.reviewId);
+  }))

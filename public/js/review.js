@@ -237,3 +237,23 @@ export const addEventsToDeleteReviewBtns = deleteReviewBtns => {
     });
   });
 };
+
+export const deleteReviewAtMyReviews = async reviewId => {
+  try {
+    const result = window.confirm('CONFIRM: Do you delete this review?')
+    if (result) {
+      const res = await axios({
+        method: 'DELETE',
+        url: `http://127.0.0.1:3000/api/v1/reviews/${reviewId}`
+      })
+      if (res.status === 204) {
+        showAlert('success', 'This review is deleted successfully!');
+        location.reload(true);
+      }
+    } else {
+      location.reload(false);
+    }
+  } catch(err) {
+    showAlert('error', err.response.data.message);
+  }
+}

@@ -5,7 +5,7 @@ block content
     .card-container
 
       each review in reviews
-        .card
+        .card(data-review-id=`${review.id}`)
           .card__header
             .card__picture
               .card__picture-overlay &nbsp;
@@ -24,3 +24,4 @@ block content
                 svg.reviews__star(class=`reviews__star--${review.rating >= star ? 'active' : 'inactive'}`)
                   use(xlink:href='/img/icons.svg#icon-star')
             a.btn.btn--green.btn--small.edit-review(href=`/reviews/${review.id}/edit`) Edit
+            button.btn.btn--red.btn--small.delete-review Delete

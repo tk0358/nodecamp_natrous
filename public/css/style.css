@@ -1487,14 +1487,21 @@ textarea {
 
 /* Edit review */
 .edit-review {
-  position: absolute;
+  /* position: absolute;
   right: 20px;
-  bottom: 10px;
+  bottom: 10px; */
 }
+
+/* Delete review */
+.delete-review {
+}
+
 
 .review-footer {
   position: relative;
 }
+
+
 
 #review-text {
   height: 150px;
