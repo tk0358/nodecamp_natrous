@@ -27,7 +27,7 @@ export const deleteUser = async userId => {
       method: 'DELETE',
       url: `http://127.0.0.1:3000/api/v1/users/${userId}`,
     });
-    console.log(res);
+    // console.log(res);
     if (res.status === 204) {
       showAlert('success', 'This user is deleted successfully!');
       window.setTimeout(() => {
