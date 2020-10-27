@@ -433,7 +433,7 @@ if (editUserBtns)
           .querySelector('.btn--update-user')
           .addEventListener('click', updateUserFunc);
         document
-          .querySelector('.btn--cancel-user')
+          .querySelector('.btn--cancel')
           .addEventListener('click', e => {
             e.preventDefault();
             location.reload(true);

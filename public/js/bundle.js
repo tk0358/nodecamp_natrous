@@ -10937,7 +10937,7 @@ if (editUserBtns) editUserBtns.forEach(function (btn) {
       var mailConfirmNum = mailConfirmOptions["".concat(mailConfirm)];
       document.getElementById('mailConfirm').options["".concat(mailConfirmNum)].selected = true;
       document.querySelector('.btn--update-user').addEventListener('click', updateUserFunc);
-      document.querySelector('.btn--cancel-user').addEventListener('click', function (e) {
+      document.querySelector('.btn--cancel').addEventListener('click', function (e) {
         e.preventDefault();
         location.reload(true);
       });
