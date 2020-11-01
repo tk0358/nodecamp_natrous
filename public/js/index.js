@@ -466,7 +466,7 @@ if (deleteUserBtns)
       const dialog = window.confirm('本当にこのユーザを削除しますか？');
       if (dialog) {
         const userId = e.target.parentNode.parentNode.id;
-        console.log(userId);
+        // console.log(userId);
         deleteUser(userId);
       } else {
         location.reload(false);

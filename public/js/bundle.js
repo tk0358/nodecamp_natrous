@@ -10967,8 +10967,8 @@ if (deleteUserBtns) deleteUserBtns.forEach(function (btn) {
     var dialog = window.confirm('本当にこのユーザを削除しますか？');
 
     if (dialog) {
-      var userId = e.target.parentNode.parentNode.id;
-      console.log(userId);
+      var userId = e.target.parentNode.parentNode.id; // console.log(userId);
+
       (0, _user.deleteUser)(userId);
     } else {
       location.reload(false);
