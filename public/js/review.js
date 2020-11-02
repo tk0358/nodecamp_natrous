@@ -7,7 +7,7 @@ export const createReview = async (rating, review, user, tour) => {
   try {
     const res = await axios({
       method: 'POST',
-      url: 'http://127.0.0.1:3000/api/v1/reviews',
+      url: '/api/v1/reviews',
       data: {
         rating,
         review,
@@ -28,7 +28,7 @@ export const updateReview = async (reviewId, rating, review) => {
   try {
     const res = await axios({
       method: 'PATCH',
-      url: `http://127.0.0.1:3000/api/v1/reviews/${reviewId}`,
+      url: `/api/v1/reviews/${reviewId}`,
       data: {
         rating,
         review,
@@ -45,24 +45,20 @@ export const updateReview = async (reviewId, rating, review) => {
 
 export const sortReview = async field => {
   try {
-    console.log(field);
     let res;
     if (field) {
-      // console.log('field is not undefined');
       res = await axios({
         method: 'GET',
-        url: `http://127.0.0.1:3000/api/v1/reviews?sort=${field}`,
+        url: `/api/v1/reviews?sort=${field}`,
       });
     } else {
-      // console.log('field is undefined');
       res = await axios({
         method: 'GET',
-        url: 'http://127.0.0.1:3000/api/v1/reviews',
+        url: '/api/v1/reviews',
       });
       // 'http://.../api/v1/reviews'は'http://.../api/vi/reviews?sort=-createdAt'と同じ結果が返ってくる(apiFeaturesのsort()参照)
     }
     const reviews = res.data.data.data;
-    // console.log(reviews);
     let el = '';
     reviews.forEach(review => {
       el += `
@@ -94,7 +90,7 @@ export const createReviewFromAdmin = async data => {
   try {
     const res = await axios({
       method: 'POST',
-      url: 'http://127.0.0.1:3000/api/v1/reviews',
+      url: '/api/v1/reviews',
       data,
     });
     if (res.data.status === 'success') {
@@ -118,8 +114,6 @@ export const addEventsToEditReviewBtns = editReviewBtns => {
       const rating = e.target.parentNode.parentNode.children[2].textContent;
       const review = e.target.parentNode.parentNode.children[3].textContent;
       const createdAt = e.target.parentNode.parentNode.children[4].textContent;
-
-      // console.log(reviewId, tourId, userId, rating, review);
 
       let el = '';
       el += await getTourSelectBox(tourId);
@@ -177,13 +171,11 @@ export const addEventsToEditReviewBtns = editReviewBtns => {
 const updateReviewFunc = e => {
   e.preventDefault();
   const reviewId = e.target.parentNode.parentNode.id;
-  // console.log(reviewId);
   const form = new URLSearchParams();
   form.append('tour', document.getElementById('tour').value);
   form.append('user', document.getElementById('user').value);
   form.append('rating', document.getElementById('rating').value);
   form.append('review', document.getElementById('review').value);
-  // console.log(...form.entries());
   updateReviewFromAdmin(reviewId, form);
 };
 
@@ -191,7 +183,7 @@ const updateReviewFromAdmin = async (reviewId, data) => {
   try {
     const res = await axios({
       method: 'PATCH',
-      url: `http://127.0.0.1:3000/api/v1/reviews/${reviewId}`,
+      url: `/api/v1/reviews/${reviewId}`,
       data,
     });
     if (res.data.status === 'success') {
@@ -209,9 +201,8 @@ const deleteReviewFromAdmin = async reviewId => {
   try {
     const res = await axios({
       method: 'DELETE',
-      url: `http://127.0.0.1:3000/api/v1/reviews/${reviewId}`,
+      url: `/api/v1/reviews/${reviewId}`,
     });
-    console.log(res);
     if (res.status === 204) {
       showAlert('success', 'This review is deleted successfully!');
       window.setTimeout(() => {
@@ -244,7 +235,7 @@ export const deleteReviewAtMyReviews = async reviewId => {
     if (result) {
       const res = await axios({
         method: 'DELETE',
-        url: `http://127.0.0.1:3000/api/v1/reviews/${reviewId}`
+        url: `/api/v1/reviews/${reviewId}`
       })
       if (res.status === 204) {
         showAlert('success', 'This review is deleted successfully!');

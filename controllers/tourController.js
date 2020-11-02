@@ -239,7 +239,7 @@ exports.updateStartDate = catchAsync(async (req, res, next) => {
   const index = req.startDateIndex;
   const { startDates } = tour;
 
-  console.log(startDates);
+  // console.log(startDates);
 
   // 2) participant
   // const participant = tour.startDates[index].participant + 1;
@@ -250,7 +250,7 @@ exports.updateStartDate = catchAsync(async (req, res, next) => {
     startDates[index].soldOut = true;
   }
 
-  console.log(startDates);
+  // console.log(startDates);
   // 4) update startDates of the tour
   await Tour.findByIdAndUpdate(req.body.tour, {
     startDates,

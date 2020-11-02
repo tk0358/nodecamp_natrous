@@ -15,13 +15,13 @@ export const sortBooking = async field => {
       // console.log('field is not undefined');
       res = await axios({
         method: 'GET',
-        url: `http://127.0.0.1:3000/api/v1/bookings?sort=${field}`,
+        url: `/api/v1/bookings?sort=${field}`,
       });
     } else {
       // console.log('field is undefined');
       res = await axios({
         method: 'GET',
-        url: 'http://127.0.0.1:3000/api/v1/bookings?sort=-createdAt',
+        url: '/api/v1/bookings?sort=-createdAt',
       });
       // 'http://.../api/v1/reviews'は'http://.../api/vi/reviews?sort=-createdAt'と同じ結果が返ってくる(apiFeaturesのsort()参照)
     }
@@ -122,7 +122,7 @@ const updateBookingFromAdmin = async (bookingId, data) => {
   try {
     const res = await axios({
       method: 'PATCH',
-      url: `http://127.0.0.1:3000/api/v1/bookings/${bookingId}`,
+      url: `/api/v1/bookings/${bookingId}`,
       data,
     });
     if (res.data.status === 'success') {
@@ -157,9 +157,9 @@ const deleteBookingFromAdmin = async bookingId => {
   try {
     const res = await axios({
       method: 'DELETE',
-      url: `http://127.0.0.1:3000/api/v1/bookings/${bookingId}`,
+      url: `/api/v1/bookings/${bookingId}`,
     });
-    console.log(res);
+    // console.log(res);
     if (res.status === 204) {
       showAlert('success', 'This booking is deleted successfully!');
       window.setTimeout(() => {
@@ -177,7 +177,7 @@ export const createBooking = async data => {
   try {
     const res = await axios({
       method: 'POST',
-      url: 'http://127.0.0.1:3000/api/v1/bookings',
+      url: '/api/v1/bookings',
       data,
     });
     if (res.data.status === 'success') {

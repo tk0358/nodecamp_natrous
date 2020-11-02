@@ -175,8 +175,8 @@ exports.getReviewEditForm = catchAsync(async (req, res, next) => {
 });
 
 exports.updateUserData = catchAsync(async (req, res, next) => {
-  console.log(req.body);
-  console.log(req.file);
+  .log(req.body);
+  // console.log(req.file);
   const updatedUser = await User.findByIdAndUpdate(
     req.user.id,
     {

@@ -5,7 +5,7 @@ export const getTourSelectBox = async tourId => {
   try {
     const res = await axios({
       method: 'GET',
-      url: 'http://127.0.0.1:3000/api/v1/tours',
+      url: '/api/v1/tours',
     });
     const tours = res.data.data.data;
     let el = '';
@@ -32,7 +32,7 @@ export const getUserSelectBox = async userId => {
   try {
     const res = await axios({
       method: 'GET',
-      url: 'http://127.0.0.1:3000/api/v1/users',
+      url: '/api/v1/users',
     });
     const users = res.data.data.data;
     // console.log(users);
@@ -57,7 +57,7 @@ export const getStartDateSelectBox = async (tourId, date) => {
   try {
     const res = await axios({
       method: 'GET',
-      url: `http://127.0.0.1:3000/api/v1/tours/${tourId}`,
+      url: `/api/v1/tours/${tourId}`,
     });
     const startDates = res.data.data.data.startDates;
     // console.log(startDates);
@@ -80,7 +80,7 @@ export const getStartDateSelectBox = async (tourId, date) => {
 export const getStartDateSelectBoxAtBookingForm = async startDates => {
   // const res = await axios({
   //   method: 'GET',
-  //   url: `http://127.0.0.1:3000/api/v1/tours/${tourId}`,
+  //   url: `/api/v1/tours/${tourId}`,
   // });
   // const startDates = res.data.data.data.startDates;
   // // console.log(startDates);

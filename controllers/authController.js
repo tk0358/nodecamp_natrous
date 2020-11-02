@@ -36,7 +36,7 @@ const generateRefreshToken = (id, ip) => {
 };
 
 const revokeRefreshToken = catchAsync(async (token, ip) => {
-  console.log(token);
+  // console.log(token);
   const refreshToken = await RefreshToken.findOne({ token });
   // revoke token and save
   refreshToken.revoked = Date.now();

@@ -117,7 +117,6 @@ if (userDataForm)
     form.append('name', document.getElementById('name').value);
     form.append('email', document.getElementById('email').value);
     form.append('photo', document.getElementById('photo').files[0]);
-    console.log(form);
 
     updateSettings(form, 'data');
   });
@@ -157,7 +156,6 @@ if (reviewForm)
     const review = document.getElementById('review-text').value;
     const user = document.getElementById('review-user').dataset.userId;
     const tour = document.getElementById('review-user').dataset.tourId;
-    console.log(rating, review, user, tour);
     createReview(rating, review, user, tour);
   });
 
@@ -191,7 +189,6 @@ if (addDateBtn)
     e.preventDefault();
     const formStartDates = document.getElementById('form__startDates');
     let count = formStartDates.childElementCount;
-    // console.log(count);
     const el = `
       <div class="form__group form__group-startDate">
         <label class="form__label" for="startDate${count}">startDate${
@@ -223,7 +220,6 @@ if (deleteDateBtn)
     const startDateGroups = document.getElementsByClassName(
       'form__group-startDate'
     );
-    // console.log(startDateGroups);
     const formStartDates = document.getElementById('form__startDates');
     formStartDates.removeChild(startDateGroups[startDateGroups.length - 1]);
     const count = formStartDates.childElementCount;
@@ -239,7 +235,6 @@ if (addLocBtn)
     e.preventDefault();
     const formlocations = document.getElementById('form__locations');
     let count = formlocations.childElementCount;
-    // console.log(count);
     const el = `
       <div class="form__group form__group-location">
         <label class="form__label" for="coordinates-ew-${count}">locations${
@@ -331,7 +326,6 @@ const appendFormInfo = (form, type) => {
     );
     const imageCover = document.getElementById('imageCover').files[0];
     const images = document.getElementById('images').files;
-    console.log(images);
     if (imageCover) form.append('imageCover', imageCover);
     if (images) {
       Array.from(images).forEach(image => {
@@ -349,8 +343,6 @@ if (updateTourForm)
 
     let form = new FormData();
     form = appendFormInfo(form, 'update');
-
-    // console.log(...form.entries());
 
     updateTour(form, tourId);
   });
@@ -378,9 +370,7 @@ if (deleteTourBtns)
 
 // EditTourにおいて、difficultyのselectBoxに初期値を設定する
 if (selectBoxDifficultyEdit) {
-  // console.log(selectBoxDifficultyEdit.options);
   const val = selectBoxDifficultyEdit.dataset.difficulty;
-  console.log(val);
   if (val === 'easy') {
     selectBoxDifficultyEdit.options[1].selected = true;
   } else if (val === 'medium') {
@@ -454,7 +444,6 @@ const updateUserFunc = e => {
   form.append('active', elements[3].firstChild.value);
   form.append('mailConfirm', elements[4].firstChild.value);
   form.append('photo', elements[5].firstChild.files[0]);
-  // console.log(...form.entries());
   updateUser(form, userId);
 };
 
@@ -466,7 +455,6 @@ if (deleteUserBtns)
       const dialog = window.confirm('本当にこのユーザを削除しますか？');
       if (dialog) {
         const userId = e.target.parentNode.parentNode.id;
-        // console.log(userId);
         deleteUser(userId);
       } else {
         location.reload(false);
@@ -520,7 +508,6 @@ if (createReviewForm)
     form.append('rating', document.getElementById('rating').value);
     form.append('review', document.getElementById('review').value);
 
-    // console.log(...form.entries());
     createReviewFromAdmin(form);
   });
 
@@ -548,7 +535,6 @@ if (createBookingForm) {
     const tourId = tourElement.value;
     let el = '';
     const tour = await getTourInfo(tourId);
-    // console.log(tour);
     el += await getStartDateSelectBoxAtBookingForm(tour.startDates);
     el += `
       <div class='form__group'>
@@ -577,14 +563,12 @@ if (createBookingForm) {
   // formのbuttonが押され'submit'イベントが発生したとき
   createBookingForm.addEventListener('submit', e => {
     e.preventDefault();
-    // console.log('create button is clicked');
     const form = new URLSearchParams();
     form.append('user', document.getElementById('user').value);
     form.append('tour', document.getElementById('tour').value);
     form.append('startDate', document.getElementById('startDate').value);
     form.append('price', document.getElementById('price').value);
     form.append('paid', document.getElementById('paid').value);
-    // console.log(...form.entries());
     createBooking(form);
   });
 }
@@ -593,6 +577,5 @@ if (createBookingForm) {
 if (deleteReviewBtnsAtMyReviews)
 deleteReviewBtnsAtMyReviews.forEach(btn => btn.addEventListener('click', e => {
     e.preventDefault();
-    console.log(e.target.parentNode.parentNode.dataset.reviewId)
     deleteReviewAtMyReviews(e.target.parentNode.parentNode.dataset.reviewId);
   }))

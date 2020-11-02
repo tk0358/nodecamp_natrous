@@ -6,10 +6,9 @@ export const updateUser = async (data, userId) => {
   try {
     const res = await axios({
       method: 'PATCH',
-      url: `http://127.0.0.1:3000/api/v1/users/${userId}`,
+      url: `/api/v1/users/${userId}`,
       data,
     });
-    console.log(res);
     if (res.data.status === 'success') {
       showAlert('success', 'User is updated successfully!');
       window.setTimeout(() => {
@@ -25,9 +24,8 @@ export const deleteUser = async userId => {
   try {
     const res = await axios({
       method: 'DELETE',
-      url: `http://127.0.0.1:3000/api/v1/users/${userId}`,
+      url: `/api/v1/users/${userId}`,
     });
-    // console.log(res);
     if (res.status === 204) {
       showAlert('success', 'This user is deleted successfully!');
       window.setTimeout(() => {
@@ -43,7 +41,7 @@ export const createUser = async data => {
   try {
     const res = await axios({
       method: 'POST',
-      url: 'http://127.0.0.1:3000/api/v1/users/',
+      url: '/api/v1/users/',
       data,
     });
     if (res.data.status === 'success') {

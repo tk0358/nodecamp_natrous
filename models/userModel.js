@@ -165,7 +165,7 @@ userSchema.methods.createPasswordResetToken = function () {
 userSchema.methods.createConfirmToken = function () {
   const confirmToken = crypto.randomBytes(32).toString('hex');
 
-  console.log(confirmToken);
+  // console.log(confirmToken);
 
   this.confirmToken = crypto
     .createHash('sha256')

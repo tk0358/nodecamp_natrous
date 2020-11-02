@@ -6,7 +6,7 @@ export const login = async (email, password) => {
   try {
     const res = await axios({
       method: 'POST',
-      url: 'http://127.0.0.1:3000/api/v1/users/login',
+      url: '/api/v1/users/login',
       data: {
         email,
         password,
@@ -14,7 +14,6 @@ export const login = async (email, password) => {
     });
 
     if (res.data.status === 'success') {
-      console.log(res.data);
       // 2段階認証部なのでテストの為コメントアウト
       // const { serviceId } = res.data
       // showAlert('success', 'We sent SMS code to your phone! Please confirm it!');
@@ -30,9 +29,7 @@ export const login = async (email, password) => {
         }, 1500);
       }
     }
-    // console.log(res);
   } catch (err) {
-    // console.log(err.response.data);
     showAlert('error', err.response.data.message);
   }
 };
@@ -41,7 +38,7 @@ export const smsAuth = async (serviceId, code) => {
   try {
     const res = await axios({
       method: 'POST',
-      url: 'http://127.0.0.1:3000/api/v1/users/smsAuth',
+      url: '/api/v1/users/smsAuth',
       data: {
         serviceId,
         code
@@ -62,7 +59,7 @@ export const logout = async () => {
   try {
     const res = await axios({
       method: 'GET',
-      url: 'http://127.0.0.1:3000/api/v1/users/logout',
+      url: '/api/v1/users/logout',
     });
     if (res.data.status === 'success') {
       showAlert('success', 'Logged out successfully!');
@@ -80,7 +77,7 @@ export const signup = async (name, email, password, passwordConfirm) => {
   try {
     const res = await axios({
       method: 'POST',
-      url: 'http://127.0.0.1:3000/api/v1/users/signup',
+      url: '/api/v1/users/signup',
       data: {
         name,
         email,
@@ -95,7 +92,6 @@ export const signup = async (name, email, password, passwordConfirm) => {
       }, 1500);
     }
   } catch (err) {
-    // console.log(err.response.data);
     showAlert('error', err.response.data.message);
   }
 };
