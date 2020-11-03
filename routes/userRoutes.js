@@ -4,7 +4,6 @@ const authController = require('../controllers/authController');
 const reviewRouter = require('./reviewRoutes');
 const bookingRouter = require('./bookingRoutes');
 const likeRouter = require('./likeRoutes');
-const { route } = require('./reviewRoutes');
 
 const router = express.Router();
 
