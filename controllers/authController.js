@@ -381,8 +381,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 // Only for rendered pages, no errors!
 exports.isLoggedIn = async (req, res, next) => {
-  console.log('start');
-  console.log(req.cookies);
+  // console.log(req.cookies);
 
   let currentUser;
   try {
