@@ -44,15 +44,16 @@ const revokeRefreshToken = catchAsync(async (token, ip) => {
   await refreshToken.save();
 });
 
-const createJwtAndCookieOptions = user => {
+const createJwtAndCookieOptions = (user, req) => {
   const jwtToken = generateJwtToken(user._id);
   const jwtCookieOptions = {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 60 * 1000
     ),
     httpOnly: true,
+    secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
   };
-  if (process.env.NODE_ENV === 'production') jwtCookieOptions.secure = true;
+
   return { jwtToken, jwtCookieOptions };
 };
 
@@ -71,13 +72,13 @@ const createRefreshAndCookieOptions = async (user, ip) => {
   return { refreshToken: refreshToken.token, refreshCookieOptions };
 };
 
-const createSendToken = async ({ user, ip }, statusCode, res) => {
-  const { jwtToken, jwtCookieOptions } = createJwtAndCookieOptions(user);
+const createSendToken = async (user, statusCode, req, res) => {
+  const { jwtToken, jwtCookieOptions } = createJwtAndCookieOptions(user, req);
 
   const {
     refreshToken,
     refreshCookieOptions,
-  } = await createRefreshAndCookieOptions(user, ip);
+  } = await createRefreshAndCookieOptions(user, req.ip);
 
   res
     .cookie('jwtToken', jwtToken, jwtCookieOptions)
@@ -189,7 +190,6 @@ exports.confirmEmail = catchAsync(async (req, res, next) => {
 
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
-  const { ip } = req;
 
   // 1) Check if email and password exist
   if (!email || !password) {
@@ -240,16 +240,15 @@ exports.login = catchAsync(async (req, res, next) => {
   // ) revoke used refreshToken
   // console.log(req.cookies);
   if (req.cookies.refreshToken) {
-    await revokeRefreshToken(req.cookies.refreshToken, ip);
+    await revokeRefreshToken(req.cookies.refreshToken, req.ip);
   }
 
   // ) If everyghing ok, create jwt and new refreshToken and send them to client
-  await createSendToken({ user, ip }, 200, res);
+  await createSendToken(user, 200, req, res);
 });
 
 exports.confirmSMS = catchAsync(async (req, res, next) => {
   const { code, serviceId } = req.body;
-  const { ip } = req;
   // 1) Get User from ServiceId
   const user = await User.findOne({ serviceId });
 
@@ -274,11 +273,11 @@ exports.confirmSMS = catchAsync(async (req, res, next) => {
     // 4) revoke used refreshToken
     // console.log(req.cookies);
     if (req.cookies.refreshToken) {
-      await revokeRefreshToken(req.cookies.refreshToken, ip);
+      await revokeRefreshToken(req.cookies.refreshToken, req.ip);
     }
 
     // 5) If everyghing ok, create jwt and new refreshToken and send them to client
-    await createSendToken({ user, ip }, 200, res);
+    await createSendToken(user, 200, req, res);
   }
 
   // when input code is incorrect
@@ -368,7 +367,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     const {
       jwtToken: newJwtToken,
       jwtCookieOptions,
-    } = createJwtAndCookieOptions(currentUser);
+    } = createJwtAndCookieOptions(currentUser, req);
 
     // send new jwtToken as cookie
     res.cookie('jwtToken', newJwtToken, jwtCookieOptions);
@@ -383,6 +382,8 @@ exports.protect = catchAsync(async (req, res, next) => {
 // Only for rendered pages, no errors!
 exports.isLoggedIn = async (req, res, next) => {
   console.log('start');
+  console.log(req.cookies);
+
   let currentUser;
   try {
     // 1) Verify token
@@ -409,7 +410,6 @@ exports.isLoggedIn = async (req, res, next) => {
   } catch (err) {
     // when jwtToken has expired or isn't, but there is a refreshToken
     if (req.cookies.refreshToken) {
-      console.log(req.cookies);
       const refreshTokenObj = await RefreshToken.findOne({
         token: req.cookies.refreshToken,
       });
@@ -422,7 +422,7 @@ exports.isLoggedIn = async (req, res, next) => {
       const {
         jwtToken: newJwtToken,
         jwtCookieOptions,
-      } = createJwtAndCookieOptions(currentUser);
+      } = createJwtAndCookieOptions(currentUser, req);
 
       // send new jwtToken as cookie
       res.cookie('jwtToken', newJwtToken, jwtCookieOptions);
@@ -510,7 +510,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   // 3) Update changedPasswordAt property for the user
 
   // 4) Log the user in, send JWT
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, req, res);
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
@@ -529,5 +529,5 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   // User.findByIdAndUpdate will NOT work as intended!
 
   // 4) Log user in, send JWT
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, req, res);
 });
