@@ -57,8 +57,8 @@ const createJwtAndCookieOptions = (user, req) => {
   return { jwtToken, jwtCookieOptions };
 };
 
-const createRefreshAndCookieOptions = async (user, ip) => {
-  const refreshToken = generateRefreshToken(user._id, ip);
+const createRefreshAndCookieOptions = async (user, req) => {
+  const refreshToken = generateRefreshToken(user._id, req.ip);
   await refreshToken.save();
 
   const refreshCookieOptions = {
@@ -66,8 +66,8 @@ const createRefreshAndCookieOptions = async (user, ip) => {
       Date.now() + process.env.REFRESH_TOKEN_EXPIRES * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,
+    secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
   };
-  if (process.env.NODE_ENV === 'production') refreshCookieOptions.secure = true;
 
   return { refreshToken: refreshToken.token, refreshCookieOptions };
 };
@@ -78,7 +78,7 @@ const createSendToken = async (user, statusCode, req, res) => {
   const {
     refreshToken,
     refreshCookieOptions,
-  } = await createRefreshAndCookieOptions(user, req.ip);
+  } = await createRefreshAndCookieOptions(user, req);
 
   res
     .cookie('jwtToken', jwtToken, jwtCookieOptions)
@@ -178,7 +178,7 @@ exports.confirmEmail = catchAsync(async (req, res, next) => {
   const {
     refreshToken,
     refreshCookieOptions,
-  } = await createRefreshAndCookieOptions(user, req.ip);
+  } = await createRefreshAndCookieOptions(user, req);
 
   res
     .cookie('jwtToken', jwtToken, jwtCookieOptions)
