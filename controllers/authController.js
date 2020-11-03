@@ -44,8 +44,8 @@ const revokeRefreshToken = catchAsync(async (token, ip) => {
   await refreshToken.save();
 });
 
-const createJwtAndCookieOptions = (user, ip) => {
-  const jwtToken = generateJwtToken(user._id, ip);
+const createJwtAndCookieOptions = user => {
+  const jwtToken = generateJwtToken(user._id);
   const jwtCookieOptions = {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 60 * 1000
@@ -72,7 +72,7 @@ const createRefreshAndCookieOptions = async (user, ip) => {
 };
 
 const createSendToken = async ({ user, ip }, statusCode, res) => {
-  const { jwtToken, jwtCookieOptions } = createJwtAndCookieOptions(user, ip);
+  const { jwtToken, jwtCookieOptions } = createJwtAndCookieOptions(user);
 
   const {
     refreshToken,
@@ -172,10 +172,7 @@ exports.confirmEmail = catchAsync(async (req, res, next) => {
   await new Email(user, url).sendWelcome();
 
   // 4) Create tokens & send them as cookie
-  const { jwtToken, jwtCookieOptions } = createJwtAndCookieOptions(
-    user,
-    req.ip
-  );
+  const { jwtToken, jwtCookieOptions } = createJwtAndCookieOptions(user);
 
   const {
     refreshToken,
@@ -371,7 +368,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     const {
       jwtToken: newJwtToken,
       jwtCookieOptions,
-    } = createJwtAndCookieOptions(currentUser, req.ip);
+    } = createJwtAndCookieOptions(currentUser);
 
     // send new jwtToken as cookie
     res.cookie('jwtToken', newJwtToken, jwtCookieOptions);
@@ -413,11 +410,9 @@ exports.isLoggedIn = async (req, res, next) => {
     // when jwtToken has expired or isn't, but there is a refreshToken
     if (req.cookies.refreshToken) {
       console.log(req.cookies);
-      console.log('aaaaaa');
       const refreshTokenObj = await RefreshToken.findOne({
         token: req.cookies.refreshToken,
       });
-      console.log('bbbbbb');
       if (!refreshTokenObj || !refreshTokenObj.isActive) {
         // when refresh token is invalid
         return next();
@@ -427,7 +422,7 @@ exports.isLoggedIn = async (req, res, next) => {
       const {
         jwtToken: newJwtToken,
         jwtCookieOptions,
-      } = createJwtAndCookieOptions(currentUser, req.ip);
+      } = createJwtAndCookieOptions(currentUser);
 
       // send new jwtToken as cookie
       res.cookie('jwtToken', newJwtToken, jwtCookieOptions);
