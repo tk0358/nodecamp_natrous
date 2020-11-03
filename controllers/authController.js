@@ -385,11 +385,12 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 // Only for rendered pages, no errors!
 exports.isLoggedIn = async (req, res, next) => {
+  console.log('start');
   let currentUser;
   try {
     // 1) Verify token
     const decoded = await promisify(jwt.verify)(
-      req.cookies.jwt,
+      req.cookies.jwtToken,
       process.env.JWT_SECRET
     );
 
@@ -411,9 +412,12 @@ exports.isLoggedIn = async (req, res, next) => {
   } catch (err) {
     // when jwtToken has expired or isn't, but there is a refreshToken
     if (req.cookies.refreshToken) {
+      console.log(req.cookies);
+      console.log('aaaaaa');
       const refreshTokenObj = await RefreshToken.findOne({
         token: req.cookies.refreshToken,
       });
+      console.log('bbbbbb');
       if (!refreshTokenObj || !refreshTokenObj.isActive) {
         // when refresh token is invalid
         return next();
