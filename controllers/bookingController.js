@@ -9,6 +9,7 @@ const AppError = require('../utils/appError');
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   // 1) Get the currently booked tour
   const tour = await Tour.findById(req.params.tourId);
+  const { startDate } = req.params;
 
   // 2) Create checkout session
   const session = await stripe.checkout.sessions.create({
@@ -28,6 +29,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
           `${req.protocol}://${req.get('host')}/img/tours/${tour.imageCover}`,
         ],
         amount: tour.price * 100,
+        startDate,
         currency: 'usd',
         quantity: 1,
       },
