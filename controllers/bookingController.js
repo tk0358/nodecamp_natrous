@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const Tour = require('../models/tourModel');
 const User = require('../models/userModel');
@@ -29,12 +31,15 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
           `${req.protocol}://${req.get('host')}/img/tours/${tour.imageCover}`,
         ],
         amount: tour.price * 100,
-        startDate,
         currency: 'usd',
         quantity: 1,
       },
     ],
+    "metadata": {
+      startDate: startDate,
+    },
   });
+  // "metadata" is OK, but metadata is NG
 
   // 3) Create session as response
   res.status(200).json({
@@ -81,7 +86,7 @@ const createBookingCheckout = async session => {
   const tour = session.client_reference_id;
   const user = (await User.findOne({ email: session.customer_email }))._id;
   const price = session.amount_total / 100;
-  const startDate = new Date(Number(session.startDate));
+  const startDate = new Date(Number(session.metadata.startDate));
   await Booking.create({ tour, user, price, startDate });
 };
 
