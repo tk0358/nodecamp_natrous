@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get(
   '/',
-  bookingController.createBookingCheckout,
+  // bookingController.createBookingCheckout,
   authController.isLoggedIn,
   viewsController.getOverview
 );
@@ -34,12 +34,7 @@ router.get(
   viewsController.getNewTour
 );
 
-router.get(
-  '/tour/:slug',
-  authController.isLoggedIn,
-  // viewsController.canReviewThisTour,
-  viewsController.getTour
-);
+router.get('/tour/:slug', authController.isLoggedIn, viewsController.getTour);
 
 router.get(
   '/tour/:slug/edit',
@@ -94,7 +89,13 @@ router.get('/login', authController.isLoggedIn, viewsController.getLoginForm);
 router.get('/sms-auth', authController.isLoggedIn, viewsController.getSmsForm);
 router.get('/signup', authController.isLoggedIn, viewsController.getSignupForm);
 router.get('/me', authController.protect, viewsController.getAccount);
-router.get('/my-tours', authController.protect, viewsController.getMyTours);
+
+router.get(
+  '/my-tours',
+  // viewsController.canReviewThisTour,
+  authController.protect,
+  viewsController.getMyTours
+);
 router.get(
   '/my-favorites',
   authController.protect,
