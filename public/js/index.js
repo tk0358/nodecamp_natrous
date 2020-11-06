@@ -1,5 +1,6 @@
 /* eslint-disable */
 import '@babel/polyfill';
+import { showAlert } from './alerts';
 import { displayMap } from './mapbox';
 import { login, smsAuth, logout, signup } from './login';
 import { updateSettings } from './updateSettings';
@@ -579,3 +580,6 @@ deleteReviewBtnsAtMyReviews.forEach(btn => btn.addEventListener('click', e => {
     e.preventDefault();
     deleteReviewAtMyReviews(e.target.parentNode.parentNode.dataset.reviewId);
   }))
+
+const alertMessage = document.querySelector('body').dataset.alert
+if (alertMessage) showAlert('success', alertMessage, 20)
