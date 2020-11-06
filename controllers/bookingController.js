@@ -35,11 +35,10 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
         quantity: 1,
       },
     ],
-    "metadata": {
+    metadata: {
       startDate: startDate,
     },
   });
-  // "metadata" is OK, but metadata is NG
 
   // 3) Create session as response
   res.status(200).json({
