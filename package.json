@@ -35,7 +35,7 @@
     "nodemailer": "^6.4.10",
     "nodemailer-sendgrid-transport": "^0.2.0",
     "pug": "^3.0.0",
-    "sharp": "^0.26.0",
+    "sharp": "^0.30.5",
     "slugify": "^1.4.0",
     "stripe": "^7.0.0",
     "twilio": "^3.50.0",
